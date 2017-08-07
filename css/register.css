@@ -1,0 +1,17 @@
+#register {
+  background: url("../images/splash2.jpg") no-repeat;
+  background-size: 100%;
+  padding:2%;
+  height:100%;
+}
+.container
+{
+	background:rgba(255,255,255, 0.6);
+}
+input, label, h3{
+	margin-top:0;
+	margin-bottom:0;
+	margin-right: 5%;
+	margin-left: 5%; 
+	max-width: 75%;
+}
