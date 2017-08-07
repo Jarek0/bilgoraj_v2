@@ -82,7 +82,7 @@ function getStreet() {
   if (street != '') {
     var jsonString = getNumber();
     if (jsonString) {
-      jsonString.address.street = street;
+      jsonString.street = street;
       return jsonString;
     }
   } else
