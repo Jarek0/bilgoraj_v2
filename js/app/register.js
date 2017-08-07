@@ -23,11 +23,13 @@ else return;
 }
 
 function collectData() {
-  var name = document.getElementById('firstname').value;
-  if (name != '') {
+  var nameField = document.getElementById('firstname');
+  var name = nameField.value;
+  var pattern = nameField.pattern;
+  if (name != '' && name.match('pattern')) {
     var jsonString = getSurname();
     if (jsonString) {
-      var firstName = { "name": name };
+      var firstName = { "firstname": name };
       jsonString.push(firstName);
       return jsonString;
     }
@@ -67,8 +69,10 @@ function getPass() {
   if (pass1 != '' && pass2 != '' && pass1 == pass2) {
     var jsonString = getStreet();
     if (jsonString) {
-      var pass = { "password": pass1 };
-      jsonString.push(pass);
+      var pass1 = { "password": pass1 };
+      jsonString.push(pass1);
+        var pass2 = { "password-confirm": pass2 };
+        jsonString.push(pass2);
       return jsonString;
     }
   } else
@@ -93,7 +97,7 @@ function getNumber() {
   if (number != '') {
     var jsonString = getOffice();
     if (jsonString) {
-      var buildingNumber = { "Building-number": number };
+      var buildingNumber = { "buildingNumber": number };
       jsonString.push(buildingNumber);
       return jsonString;
     }
@@ -106,7 +110,7 @@ function getOffice() {
   if (office != '') {
     var jsonString = getZip();
     if (jsonString) {
-      var officeNumber = { "Office-number": office };
+      var officeNumber = { "flatNumber": office };
       jsonString.push(officeNumber);
       return jsonString;
     }
@@ -118,7 +122,7 @@ function getZip() {
   if (zip != '') {
     var jsonString = getCity();
     if (jsonString) {
-      var zipCode = { "Zip": zip };
+      var zipCode = { "zipCode": zip };
       jsonString.push(zipCode);
       return jsonString;
     }
@@ -130,7 +134,7 @@ function getCity() {
   if (city != '') {
     var jsonString = getPhone();
     if (jsonString) {
-      var cityName = { "City": city };
+      var cityName = { "city": city };
       jsonString.push(cityName);
       return jsonString;
     }
@@ -141,7 +145,7 @@ function getPhone() {
   var phone = document.getElementById('address-phone').value;
   if (phone != '') {
     var jsonString = [];
-      var phoneNumber = { "Phone-number": phone };
+      var phoneNumber = { "phone": phone };
       jsonString.push(phoneNumber);
       return jsonString;
   } else
