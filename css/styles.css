@@ -543,3 +543,7 @@ label+.radio {
     margin-right: auto;
 }
 
+#link,#link:hover{
+    color: black;
+    style: none;
+}
