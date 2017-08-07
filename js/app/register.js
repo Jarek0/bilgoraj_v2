@@ -139,10 +139,8 @@ function getPhone() {
   var phone = document.getElementById('address-phone').value;
   if (phone != '') {
     var jsonString = {};
-
-    var phoneNumber = { "Phone-number": phone };
     var address = {
-      "Phone-number": phone
+      "phone": phone
     };
     jsonString.address = address;
     return jsonString;
