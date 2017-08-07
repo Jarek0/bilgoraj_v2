@@ -175,7 +175,7 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
                 $("<div id='guestSignin' class='splashInfoActionButton guestOfficialColor'>" +
                     "<span class='socialMediaIcon sprites guest-user_29'></span>" +
                     i18n.labels.guestName + "</div>"+
-                    "<div id='rejestracja'> <a href='register.html'> <img src='images/register.png' alt=''>" +
+                    "<div id='rejestracja'> <a id='link' href='register.html'> <img src='images/register.png' alt=''>" +
                     "<span style='display: block;'>Rejestracja</span> </a> </div>"
                     ).appendTo(actionButtonContainer)
                 $("#guestSignin").on("click", function () {
