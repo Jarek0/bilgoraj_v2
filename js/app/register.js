@@ -23,8 +23,10 @@ else return;
 }
 
 function collectData() {
-  var name = document.getElementById('firstname').value;
-  if (name != '') {
+  var nameField = document.getElementById('firstname');
+  var name = nameField.value;
+  var pattern = nameField.pattern;
+  if (name != '' && name.match('pattern')) {
     var jsonString = getSurname();
     if (jsonString) {
       var firstName = { "name": name };
