@@ -1,32 +1,31 @@
 function register() {
   var data = collectData();
-  console.log(data);
-  if(data)
-  $.ajax({
-    url: '',
-    type: 'POST',
-    contentType: "application/json",
-    dataType: 'json',
-    success: (function(data) {
-      this.props.setPage(data);
-    }).bind(this),
-    error: (function(xhr, ajaxOptions, thrownError) {
-      this.props.showMessageBox({
-        isShown: true,
-        messageText: xhr.responseText,
-        messageType: "alert-danger"
-      });
-    }).bind(this),
-    data: JSON.stringify(data)
-  });
-else return;
+  if (data)
+    $.ajax({
+      url: '',
+      type: 'POST',
+      contentType: "application/json",
+      dataType: 'json',
+      success: (function(data) {
+        this.props.setPage(data);
+      }).bind(this),
+      error: (function(xhr, ajaxOptions, thrownError) {
+        this.props.showMessageBox({
+          isShown: true,
+          messageText: xhr.responseText,
+          messageType: "alert-danger"
+        });
+      }).bind(this),
+      data: JSON.stringify(data)
+    });
+  else return;
 }
 
 function collectData() {
   var nameField = document.getElementById('firstname');
   var name = nameField.value;
-  var pattern = nameField.pattern;
-  if (name != '' && name.match('pattern')) {
+  // var pattern =new RegExp(nameField.pattern);
+  if (name != '' /*&& name.match('pattern')*/ ) {
     var jsonString = getSurname();
     if (jsonString) {
       var firstName = { "firstname": name };
@@ -43,7 +42,7 @@ function getSurname() {
     var jsonString = getMail();
     if (jsonString) {
       var lastName = { "lastName": name };
-      jsonString.push(lastName);
+      jsonString.lastname = name;
       return jsonString;
     }
   } else
@@ -55,8 +54,7 @@ function getMail() {
   if (eMail != '') {
     var jsonString = getPass();
     if (jsonString) {
-      var email = { "email": eMail };
-      jsonString.push(email);
+      jsonString.email = eMail;
       return jsonString;
     }
   } else
@@ -84,8 +82,7 @@ function getStreet() {
   if (street != '') {
     var jsonString = getNumber();
     if (jsonString) {
-      var streetName = { "street": street };
-      jsonString.push(streetName);
+      jsonString.address.street = street;
       return jsonString;
     }
   } else
@@ -117,6 +114,7 @@ function getOffice() {
   } else
     return false;
 }
+
 function getZip() {
   var zip = document.getElementById('address-zip').value;
   if (zip != '') {
@@ -129,6 +127,7 @@ function getZip() {
   } else
     return false;
 }
+
 function getCity() {
   var city = document.getElementById('address-city').value;
   if (city != '') {
@@ -141,6 +140,7 @@ function getCity() {
   } else
     return false;
 }
+
 function getPhone() {
   var phone = document.getElementById('address-phone').value;
   if (phone != '') {
