@@ -1,0 +1,71 @@
+{
+    "webscene": "c4267f5c66e748c6b6f245ca81976819",
+    "portalurl": "https://www.arcgis.com",
+	"survey": "Bilgoraj_ankieta",
+
+    "titleText": "Model 3D - Biłgoraj",
+    "splashText": "Ankieta jest skierowana do mieszkaców miasta Biłgoraj i dotyczy obszaru rewitalizacji",
+    "helpText": "Pomoc",
+    "finishText": "Dziękujemy za udział w ankiecie",
+
+    "showGuest": true,
+    "allowGuestSubmissions": true,
+
+    "showFacebook": false,
+    "facebookAppId": "",
+
+    "showGooglePlus": false,
+    "googleplusClientId": "",
+
+    "showTwitter": false,
+
+    "headingFieldName": "heading",
+    "tiltFieldName": "tilt",
+    "rollFieldName": "roll",
+    "slidenameFieldName": "slidename",
+    "surveyorFieldName": "surveyor",
+    "socialMediaFieldName": "socialmedia",
+
+    "surveyNotificationPolicy": "allImportant",
+    "showSeeResponsesButton": true,
+    "useWebmapOrigImg": false,
+	"splashBackgroundUrl": "images/splash2.jpg",
+    "brandingIconUrl": "images/gis_expert_logo_160x80.png",
+
+    "clusterSymDisplay": {
+        "averagingFieldName": "question1",
+        "averagingColorStops": [{
+            "value": 1,
+            "color": "#00ff00"
+        }, {
+            "value": 2,
+            "color": "#80ff00"
+        }, {
+            "value": 3,
+            "color": "#ffff00"
+        }, {
+            "value": 4,
+            "color": "#ff8000"
+        }, {
+            "value": 5,
+            "color": "#ff0000"
+        }],
+        "featureCountSizeStops": [{
+            "value": 1,
+            "size": 20
+        }, {
+            "value": 10,
+            "size": 60
+        }]
+    },
+    "pieChartColors": {
+		"question1": ["#894444", "#F5A27A", "#E1E1E1", "#ABCD66", "#5C8944"],
+        "question2": ["#80A562", "#616969", "#BF4F51"]
+    },
+
+    "urlParamsFilter": ["webscene", "portalurl", "survey", "locale", "app", "diag"],
+    "app": "publicSurvey",
+    "twitterSigninUrl": "https://utility.arcgis.com/tproxy/signin",
+    "twitterUserUrl": "https://utility.arcgis.com/tproxy/proxy/1.1/account/verify_credentials.json?q=&include_entities=true&skip_status=true&locale=en",
+    "twitterCallbackUrl": "/oauth-callback-twitter.html"
+}
