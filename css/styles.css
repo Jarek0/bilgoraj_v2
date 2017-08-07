@@ -542,11 +542,8 @@ label+.radio {
     margin-left: auto;
     margin-right: auto;
 }
-#rejestracja
-{
-    display: inline;
-}
-a,a:hover{
+
+#link,#link:hover{
     color: black;
     style: none;
 }
