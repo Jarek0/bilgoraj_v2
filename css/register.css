@@ -7,11 +7,12 @@
 .container
 {
 	background:rgba(255,255,255, 0.6);
+	height: 95%;
 }
-input, label, h3{
+.form-group, h3{
 	margin-top:0;
 	margin-bottom:0;
-	margin-right: 5%;
-	margin-left: 5%; 
+	margin-right: auto;
+	margin-left: auto; 
 	max-width: 75%;
 }
