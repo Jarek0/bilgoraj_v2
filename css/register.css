@@ -17,3 +17,6 @@ body {
 	margin-left: auto; 
 	max-width: 75%;
 }
+.error{
+	color:red;
+}
