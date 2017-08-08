@@ -1,5 +1,6 @@
 function register() {
   var data = collectData();
+  console.log(data);
   if (data)
     $.ajax({
       url: '',
@@ -22,128 +23,192 @@ function register() {
 }
 
 function collectData() {
+  var error = document.getElementById('firstnameError');
+  error.innerHTML = '';
   var nameField = document.getElementById('firstname');
   var name = nameField.value;
-  // var pattern =new RegExp(nameField.pattern);
-  if (name != '' /*&& name.match('pattern')*/ ) {
+  var pattern = new RegExp(nameField.pattern);
+  if (name.match(pattern)) {
     var jsonString = getSurname();
     if (jsonString) {
       var firstName = { "name": name };
       jsonString.firstname = name;
       return jsonString;
-    }
-  } else
+    } else
+      return false;
+  } else {
+    error.innerHTML = 'Wypełnij to pole imieniem zaczynającym się z wielkiej litery';
     return false;
+  }
 }
 
 function getSurname() {
-  var name = document.getElementById('lastname').value;
-  if (name != '') {
+  var error = document.getElementById('lastnameError');
+  error.innerHTML = '';
+  var lastNameField = document.getElementById('lastname');
+  var name = lastNameField.value;
+  var pattern = new RegExp(lastNameField.pattern);
+  if (name.match(pattern)) {
     var jsonString = getMail();
     if (jsonString) {
       var lastName = { "lastName": name };
       jsonString.lastname = name;
       return jsonString;
-    }
-  } else
+    } else
+      return false;
+  } else {
+
+    error.innerHTML = 'Wypełnij to pole nazwiskiem zaczynającym się z wielkiej litery';
     return false;
+  }
 }
 
 function getMail() {
-  var eMail = document.getElementById('email').value;
-  if (eMail != '') {
+  var error = document.getElementById('emailError');
+  error.innerHTML = '';
+  var mailField = document.getElementById('email');
+  var mail = mailField.value;
+  var pattern = new RegExp(mailField.pattern);
+  if (mail.match(pattern)) {
     var jsonString = getPass();
     if (jsonString) {
       jsonString.email = eMail;
       return jsonString;
     }
-  } else
+  } else {
+
+    error.innerHTML = 'Wypełnij to pole mailem na przykład: "przykladowy@email.pl"';
     return false;
+  }
 }
 
 function getPass() {
+  var field1 = document.getElementById('passwordError');
+  var field2 = document.getElementById('confirmError');
+  field2.innerHTML = '';
+  field1.innerHTML = '';
   var pass1 = document.getElementById('password').value;
   var pass2 = document.getElementById('password-confirm').value;
-  if (pass1 != '' && pass2 != '' && pass1 == pass2) {
-    var jsonString = getStreet();
-    if (jsonString) {
-      jsonString.password = pass1;
-      jsonString.confirmPassword = pass2;
-      return jsonString;
+  if (pass1.length >= 6) {
+    if (pass1 == pass2) {
+      var jsonString = getStreet();
+      if (jsonString) {
+        jsonString.password = pass1;
+        jsonString.confirmPassword = pass2;
+        return jsonString;
+      } else
+        return false;
+    } else {
+
+      field2.innerHTML = 'Hasła nie pokrywają się';
     }
-  } else
+  } else {
+
+    field1.innerHTML = 'Hasło powinno zawierać co najmniej 6 znaków';
     return false;
+  }
 }
 
 function getStreet() {
-  var street = document.getElementById('address-street').value;
-  if (street != '') {
+  var error = document.getElementById('streetError');
+  error.innerHTML = '';
+  var streetField = document.getElementById('address-street');
+  var street = streetField.value;
+  var pattern = new RegExp(streetField.pattern);
+  if (street.match(pattern)) {
     var jsonString = getNumber();
     if (jsonString) {
       jsonString.address.street = street;
       return jsonString;
-    }
-  } else
+    } else
+      return false;
+  } else {
+    error.innerHTML = 'Podaj nazwę ulicy zaczynającej się od wielkiej litery';
     return false;
+  }
 }
 
 function getNumber() {
-  var number = document.getElementById('address-number').value;
-  if (number != '') {
+  var error = document.getElementById('buildingNumberError');
+  error.innerHTML = '';
+  var number = parseInt(document.getElementById('address-number').value);
+  if (!isNaN(number) && number > 0) {
     var jsonString = getOffice();
     if (jsonString) {
       jsonString.address.buildingNumber = number;
       return jsonString;
-    }
-  } else
+    } else
+      return false;
+  } else {
+    error.innerHTML = 'podaj liczbę';
     return false;
+  }
 }
 
 function getOffice() {
   var office = document.getElementById('address-office').value;
-  if (office != '') {
-    var jsonString = getZip();
-    if (jsonString) {
+  var jsonString = getZip();
+  if (jsonString) {
+    if (office)
       jsonString.address.flatNumber = office;
-      return jsonString;
-    }
+    return jsonString;
   } else
     return false;
 }
 
 function getZip() {
-  var zip = document.getElementById('address-zip').value;
-  if (zip != '') {
+  var error = document.getElementById('zipError');
+  error.innerHTML = '';
+  var zipField = document.getElementById('address-zip');
+  var zip = zipField.value;
+  var pattern = new RegExp(zipField.pattern);
+  if (zip.match(pattern)) {
     var jsonString = getCity();
     if (jsonString) {
       jsonString.address.zipCode = zip;
       return jsonString;
-    }
-  } else
+    } else
+      return false;
+  } else {
+    error.innerHTML = 'Podaj kod pocztowy w formacie jak w przykładzie "22-222"';
     return false;
+  }
 }
 
 function getCity() {
-  var city = document.getElementById('address-city').value;
-  if (city != '') {
+  var error = document.getElementById('cityNameError');
+  error.innerHTML = '';
+  var cityField = document.getElementById('address-city');
+  var city = cityField.value;
+  var pattern = new RegExp(cityField.pattern);
+  if (city.match(pattern)) {
     var jsonString = getPhone();
     if (jsonString) {
       jsonString.address.city = city;
       return jsonString;
-    }
-  } else
+    } else
+      return false;
+  } else {
+    error.innerHTML = 'Podaj nazwę miejscowości zaczynjącą się od wielkiej litery';
     return false;
+  }
 }
 
 function getPhone() {
-  var phone = document.getElementById('address-phone').value;
-  if (phone != '') {
+    var error = document.getElementById('phoneNumberError');
+    error.innerHTML = '';
+  var phoneField = document.getElementById('address-phone');
+  phone = phoneField.value;
+  pattern = phoneField.pattern;
+  if (phone.match(pattern)) {
     var jsonString = {};
     var address = {
       "phone": phone
     };
     jsonString.address = address;
     return jsonString;
-  } else
+  } else {
+    error.innerHTML = 'Wpisz poprawny numer telefonu';
     return false;
+  }
 }
