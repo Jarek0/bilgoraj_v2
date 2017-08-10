@@ -4,7 +4,7 @@ function register() {
   data.captcha=grecaptcha.getResponse();
   if (data)
     $.ajax({
-      url: '',
+      url: 'http://localhost:8080/geoanalityka-web/rest/auth/register',
       type: 'POST',
       contentType: "application/json",
       dataType: 'json',
@@ -69,7 +69,7 @@ function getMail() {
   if (mail.match(pattern)) {
     var jsonString = getPass();
     if (jsonString) {
-      jsonString.email = eMail;
+      jsonString.username = mail;
       return jsonString;
     }
   } else {
