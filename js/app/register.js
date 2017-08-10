@@ -7,7 +7,21 @@ function register() {
     }
     else{
         sendRequest(data);
+        clearErrorsFields();
     }
+}
+
+function clearErrorsFields(){
+    document.getElementById('firstnameError').innerHTML="";
+    document.getElementById('lastnameError').innerHTML="";
+    document.getElementById('usernameError').innerHTML="";
+    document.getElementById('confirmPasswordError').innerHTML="";
+    document.getElementById('buildingNumberError').innerHTML="";
+    document.getElementById('flatNumberError').innerHTML="";
+    document.getElementById('zipCodeError').innerHTML="";
+    document.getElementById('cityError').innerHTML="";
+    document.getElementById('captchaError').innerHTML="";
+    grecaptcha.reset();
 }
 
 function collectData(){
@@ -17,6 +31,7 @@ function collectData(){
         username: document.getElementById('email'),
         password: document.getElementById('password'),
         confirmPassword: document.getElementById('password-confirm'),
+        captcha :  grecaptcha.getResponse(),
         address:{
             street: document.getElementById('address-street'),
             phone: document.getElementById('address-phone'),
@@ -30,6 +45,9 @@ function collectData(){
 
 function validateData(data){
     var errors = {};
+    if(data.captcha===undefined || data.captcha===''){
+        errors.captcha = 'Nie przeszedłeś ochrony anty botowej'
+    }
     if(!(data.firstname.value).match(data.firstname.pattern)){
         errors.firstname = 'Imię musi zaczynać się z wielkiej litery i mieć co najmniej 3 znaki'
     }
@@ -40,7 +58,7 @@ function validateData(data){
         errors.password = 'Hasło powinno zawierać co najmniej 6 znaków'
     }
     else if(data.password.value!==data.confirmPassword.value){
-        errors.confirmPassword = 'Hasło nie pokrywają się'
+        errors.confirmPassword = 'Hasła nie pokrywają się'
     }
     if(!(data.username.value).match(data.username.pattern)){
         errors.username = 'Email ma nieprawidłowy format'
@@ -99,7 +117,7 @@ function sendRequest(validatedData){
             console.log(data);
         }),
         error: (function (xhr, ajaxOptions, thrownError) {
-            console.log(xhr);
+            showErrors(JSON.parse(JSON.parse(xhr.responseText).message))
         }),
         data:JSON.stringify(data)
     });
