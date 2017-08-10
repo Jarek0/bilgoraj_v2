@@ -543,7 +543,7 @@ label+.radio {
     margin-right: auto;
 }
 
-#link,#link:hover{
+#link,#link:hover, #logIn, #logIn:hover{
     color: black;
     style: none;
 }

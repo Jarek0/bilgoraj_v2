@@ -176,7 +176,9 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
                     "<span class='socialMediaIcon sprites guest-user_29'></span>" +
                     i18n.labels.guestName + "</div>"+
                     "<div id='rejestracja'> <a id='link' href='register.html'> <img src='images/register.png' alt=''>" +
-                    "<span style='display: block;'>Rejestracja</span> </a> </div>"
+                    "<span style='display: block;'>Rejestracja</span> </a> </div>"+
+                    "<div id='logowanie'> <a id='logIn' href='logIn.html'> <img src='images/Login.png' alt=''>" +
+                    "<span style='display: block;'>Logowanie</span> </a> </div>"
                     ).appendTo(actionButtonContainer)
                 $("#guestSignin").on("click", function () {
                     handleUserSignin.loggedIn = true;
