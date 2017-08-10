@@ -17,23 +17,10 @@
 
 <body>
   <div class="container">
-    <h1>Logowanie</h1>
-    <div class="loginField">
-      <label for="login">Podaj nazwę użytkownika (e-mail)</label>
-      <input id="login" type="text" placeholder="Nazwa użytkownika"/>
-    </div>
-    <div class="error"></div>
-    <div class="passField">
-      <label for="pass">Podaj hasło</label>
-      <input id="pass" type="password" placeholder="Hasło"/>
-    </div>
-    <div id="changePass">
-      <a href="change.html">Nie pamiętam hasła</a>
-    </div>
-    <div class="error"></div>
-    <div id="button">
-      <input type="button" id="przycisk" onclick="logIn()" class="btn btn-primary btn-lg" value="Zaloguj"/>
-    </div>
+    <h1>Zmiana hasła</h1>
+    <label for="change">Podaj swój e-mail</label>
+    <input type="text" id="change" placeholder="e-mail"/>
+    <input type="button" value="zmień" class="btn btn-primary btn-lg" id="przycisk"/>
   </div>
 </body>
 
