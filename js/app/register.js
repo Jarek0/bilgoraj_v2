@@ -1,24 +1,19 @@
 function register() {
   var data = collectData();
+  console.log(data);
+  data.captcha=grecaptcha.getResponse();
   if (data)
     $.ajax({
-      url: 'http://localhost:8080/geoanalityka-web/rest/auth/register',
+      url: '',
       type: 'POST',
       contentType: "application/json",
       dataType: 'json',
-      success: (function(data) {
-        this.props.setPage(data);
-      }).bind(this),
-      error: (function(xhr, ajaxOptions, thrownError) {
-        console.log(xhr);
-        console.log(ajaxOptions);
-        console.log(thrownError);
-        this.props.showMessageBox({
-          isShown: true,
-          messageText: xhr.responseText,
-          messageType: "alert-danger"
-        });
-      }).bind(this),
+        success: (function (data) {
+            console.log(data);
+        }),
+        error: (function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr);
+        }),
       data: JSON.stringify(data)
     });
   else return;
