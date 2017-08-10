@@ -31,7 +31,7 @@ h3 {
   font-size: small;
 }
 
-#przycisk {
+#registerButton {
   margin: auto;
   display: block;
 }
@@ -41,7 +41,6 @@ h3 {
   text-align: center;
   margin-top: 0;
 }
-
 .g-recaptcha {
   margin-top: 5%;
 }
