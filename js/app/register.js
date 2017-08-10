@@ -1,9 +1,102 @@
 function register() {
+<<<<<<< HEAD
+  var data = collectData();
+  console.log(data);
+  data.captcha=grecaptcha.getResponse();
+  if (data)
+    $.ajax({
+      url: 'http://localhost:8080/geoanalityka-web/rest/auth/register',
+      type: 'POST',
+      contentType: "application/json",
+      dataType: 'json',
+      success: (function(data) {
+        this.props.setPage(data);
+      }).bind(this),
+      error: (function(xhr, ajaxOptions, thrownError) {
+        console.log(xhr);
+        console.log(ajaxOptions);
+        console.log(thrownError);
+        this.props.showMessageBox({
+          isShown: true,
+          messageText: xhr.responseText,
+          messageType: "alert-danger"
+        });
+      }).bind(this),
+
+        success: (function (data) {
+            console.log(data);
+        }),
+        error: (function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr);
+        }),
+
+      data: JSON.stringify(data)
+    });
+  else return;
+}
+
+function collectData() {
+  var error = document.getElementById('firstnameError');
+  error.innerHTML = '';
+  var nameField = document.getElementById('firstname');
+  var name = nameField.value;
+  var pattern = new RegExp(nameField.pattern);
+  var jsonString = getSurname();
+  if (name.match(pattern) && name.length<= 30) {
+    
+    if (jsonString) {
+      var firstName = { "name": name };
+      jsonString.firstname = name;
+      return jsonString;
+    } else
+      return false;
+  } else {
+    error.innerHTML = 'Imię powinno zaczynać się z wielkiej litery, mieć jedną dużą literę i co najmniej jedną małą oraz być krótsze od 30 znaków';
+    return false;
+  }
+}
+
+function getSurname() {
+  var error = document.getElementById('lastnameError');
+  error.innerHTML = '';
+  var lastNameField = document.getElementById('lastname');
+  var name = lastNameField.value;
+  var pattern = new RegExp(lastNameField.pattern);
+  var jsonString = getMail();
+  if (name.match(pattern) && name.length<= 30) {
+    
+    if (jsonString) {
+      var lastName = { "lastName": name };
+      jsonString.lastname = name;
+      return jsonString;
+    } else
+      return false;
+  } else {
+
+    error.innerHTML = 'Nazwisko powinno zaczynać się z wielkiej litery, mieć jedną dużą literę i co najmniej jedną małą oraz być krótsze od 30 znaków';
+    return false;
+  }
+}
+
+function getMail() {
+  var error = document.getElementById('emailError');
+  error.innerHTML = '';
+  var mailField = document.getElementById('email');
+  var mail = mailField.value;
+  var pattern = new RegExp(mailField.pattern);
+  var jsonString = getPass();
+  if (mail.match(pattern)) {
+    
+    if (jsonString) {
+      jsonString.username = mail;
+      return jsonString;
+=======
     var data = collectData();
     var errors = validateData(data);
     if(!isEmptyObject(errors))
     {
         showErrors(errors)
+>>>>>>> b7f6a68a8ab39887211c669b979a242b4964b748
     }
     else{
         sendRequest(data);
