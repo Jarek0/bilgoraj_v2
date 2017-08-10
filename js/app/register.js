@@ -1,211 +1,115 @@
 function register() {
-  var data = collectData();
-  console.log(data);
-  data.captcha=grecaptcha.getResponse();
-  if (data)
+    var data = collectData();
+    var errors = validateData(data);
+    if(!isEmptyObject(errors))
+    {
+        showErrors(errors)
+    }
+    else{
+        sendRequest(data);
+    }
+}
+
+function collectData(){
+    return {
+        firstname: document.getElementById('firstname'),
+        lastname: document.getElementById('lastname'),
+        username: document.getElementById('email'),
+        password: document.getElementById('password'),
+        confirmPassword: document.getElementById('password-confirm'),
+        address:{
+            street: document.getElementById('address-street'),
+            phone: document.getElementById('address-phone'),
+            buildingNumber: document.getElementById('address-number'),
+            flatNumber: document.getElementById('address-office'),
+            zipCode: document.getElementById('address-zip'),
+            city: document.getElementById('address-city')
+        }
+    };
+}
+
+function validateData(data){
+    var errors = {};
+    if(!(data.firstname.value).match(data.firstname.pattern)){
+        errors.firstname = 'Imię musi zaczynać się z wielkiej litery i mieć co najmniej 3 znaki'
+    }
+    if(!(data.lastname.value).match(data.lastname.pattern)){
+        errors.lastname = 'Nazwisko musi zaczynać się z wielkiej litery i mieć co najmniej 3 znaki'
+    }
+    if((data.password.value.length)<6){
+        errors.password = 'Hasło powinno zawierać co najmniej 6 znaków'
+    }
+    else if(data.password.value!==data.confirmPassword.value){
+        errors.confirmPassword = 'Hasło nie pokrywają się'
+    }
+    if(!(data.username.value).match(data.username.pattern)){
+        errors.username = 'Email ma nieprawidłowy format'
+    }
+    if(!(data.address.phone.value).match(data.address.phone.pattern)){
+        errors.phone = 'Number telefonu ma nieprawidłowy format'
+    }
+    if(!(data.address.street.value).match(data.address.street.pattern)){
+        errors.street = 'Nazwa ulicy musi zaczynać się z wielkiej litery i mieć co najmniej 3 znaki'
+    }
+    if(!(data.address.buildingNumber.value).match(data.address.buildingNumber.pattern)){
+        errors.buildingNumber = 'Numer budynku ma nieprawidłowy format'
+    }
+    if(!(data.address.flatNumber.value).match(data.address.flatNumber.pattern)){
+        errors.flatNumber = 'Numer lokalu ma nieprawidłowy format'
+    }
+    if(!(data.address.zipCode.value).match(data.address.zipCode.pattern)){
+        errors.zipCode = 'Kod pocztowy ma nieprawidłowy format'
+    }
+    if(!(data.address.city.value).match(data.address.city.pattern)){
+        errors.city = 'Nazwa miasta musi zaczynać się z wielkiej litery i mieć co najmniej 3 znaki'
+    }
+    return errors;
+}
+
+function showErrors(errors){
+    Object.keys(errors).map(function(key, index) {
+        document.getElementById(key+'Error').innerHTML=errors[key];
+    });
+}
+
+function sendRequest(validatedData){
+    var data={
+        captcha : grecaptcha.getResponse(),
+        firstname: validatedData.firstname.value,
+        lastname: validatedData.lastname.value,
+        username: validatedData.username.value,
+        password: validatedData.password.value,
+        confirmPassword: validatedData.confirmPassword.value,
+        address:{
+            street: validatedData.address.street.value,
+            phone: validatedData.address.phone.value,
+            buildingNumber: validatedData.address.buildingNumber.value,
+            flatNumber: validatedData.address.flatNumber.value,
+            zipCode: validatedData.address.zipCode.value,
+            city: validatedData.address.city.value
+        }
+    };
+    console.log(data);
     $.ajax({
-      url: 'http://localhost:8080/geoanalityka-web/rest/auth/register',
-      type: 'POST',
-      contentType: "application/json",
-      dataType: 'json',
+        url: 'http://localhost:8080/geoanalityka-web/rest/auth/register',
+        type: 'POST',
+        contentType: "application/json",
+        dataType: 'json',
         success: (function (data) {
             console.log(data);
         }),
         error: (function (xhr, ajaxOptions, thrownError) {
             console.log(xhr);
         }),
-      data: JSON.stringify(data)
+        data:JSON.stringify(data)
     });
-  else return;
 }
 
-function collectData() {
-  var error = document.getElementById('firstnameError');
-  error.innerHTML = '';
-  var nameField = document.getElementById('firstname');
-  var name = nameField.value;
-  var pattern = new RegExp(nameField.pattern);
-  if (name.match(pattern)) {
-    var jsonString = getSurname();
-    if (jsonString) {
-      var firstName = { "name": name };
-      jsonString.firstname = name;
-      return jsonString;
-    } else
-      return false;
-  } else {
-    error.innerHTML = 'Wypełnij to pole imieniem zaczynającym się z wielkiej litery';
-    return false;
-  }
-}
-
-function getSurname() {
-  var error = document.getElementById('lastnameError');
-  error.innerHTML = '';
-  var lastNameField = document.getElementById('lastname');
-  var name = lastNameField.value;
-  var pattern = new RegExp(lastNameField.pattern);
-  if (name.match(pattern)) {
-    var jsonString = getMail();
-    if (jsonString) {
-      var lastName = { "lastName": name };
-      jsonString.lastname = name;
-      return jsonString;
-    } else
-      return false;
-  } else {
-
-    error.innerHTML = 'Wypełnij to pole nazwiskiem zaczynającym się z wielkiej litery';
-    return false;
-  }
-}
-
-function getMail() {
-  var error = document.getElementById('emailError');
-  error.innerHTML = '';
-  var mailField = document.getElementById('email');
-  var mail = mailField.value;
-  var pattern = new RegExp(mailField.pattern);
-  if (mail.match(pattern)) {
-    var jsonString = getPass();
-    if (jsonString) {
-      jsonString.username = mail;
-      return jsonString;
+function isEmptyObject(obj) {
+    for(var prop in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+            return false;
+        }
     }
-  } else {
-
-    error.innerHTML = 'Wypełnij to pole mailem na przykład: "przykladowy@email.pl"';
-    return false;
-  }
-}
-
-function getPass() {
-  var field1 = document.getElementById('passwordError');
-  var field2 = document.getElementById('confirmError');
-  field2.innerHTML = '';
-  field1.innerHTML = '';
-  var pass1 = document.getElementById('password').value;
-  var pass2 = document.getElementById('password-confirm').value;
-  if (pass1.length >= 6) {
-    if (pass1 == pass2) {
-      var jsonString = getStreet();
-      if (jsonString) {
-        jsonString.password = pass1;
-        jsonString.confirmPassword = pass2;
-        return jsonString;
-      } else
-        return false;
-    } else {
-
-      field2.innerHTML = 'Hasła nie pokrywają się';
-    }
-  } else {
-
-    field1.innerHTML = 'Hasło powinno zawierać co najmniej 6 znaków';
-    return false;
-  }
-}
-
-function getStreet() {
-  var error = document.getElementById('streetError');
-  error.innerHTML = '';
-  var streetField = document.getElementById('address-street');
-  var street = streetField.value;
-  var pattern = new RegExp(streetField.pattern);
-  if (street.match(pattern)) {
-    var jsonString = getNumber();
-    if (jsonString) {
-      jsonString.address.street = street;
-      return jsonString;
-    } else
-      return false;
-  } else {
-    error.innerHTML = 'Podaj nazwę ulicy zaczynającej się od wielkiej litery';
-    return false;
-  }
-}
-
-function getNumber() {
-  var error = document.getElementById('buildingNumberError');
-  error.innerHTML = '';
-  var number = parseInt(document.getElementById('address-number').value);
-  if (!isNaN(number) && number > 0) {
-    var jsonString = getOffice();
-    if (jsonString) {
-      jsonString.address.buildingNumber = number;
-      return jsonString;
-    } else
-      return false;
-  } else {
-    error.innerHTML = 'podaj liczbę';
-    return false;
-  }
-}
-
-function getOffice() {
-  var office = document.getElementById('address-office').value;
-  var jsonString = getZip();
-  if (jsonString) {
-    if (office)
-      jsonString.address.flatNumber = office;
-    return jsonString;
-  } else
-    return false;
-}
-
-function getZip() {
-  var error = document.getElementById('zipError');
-  error.innerHTML = '';
-  var zipField = document.getElementById('address-zip');
-  var zip = zipField.value;
-  var pattern = new RegExp(zipField.pattern);
-  if (zip.match(pattern)) {
-    var jsonString = getCity();
-    if (jsonString) {
-      jsonString.address.zipCode = zip;
-      return jsonString;
-    } else
-      return false;
-  } else {
-    error.innerHTML = 'Podaj kod pocztowy w formacie jak w przykładzie "22-222"';
-    return false;
-  }
-}
-
-function getCity() {
-  var error = document.getElementById('cityNameError');
-  error.innerHTML = '';
-  var cityField = document.getElementById('address-city');
-  var city = cityField.value;
-  var pattern = new RegExp(cityField.pattern);
-  if (city.match(pattern)) {
-    var jsonString = getPhone();
-    if (jsonString) {
-      jsonString.address.city = city;
-      return jsonString;
-    } else
-      return false;
-  } else {
-    error.innerHTML = 'Podaj nazwę miejscowości zaczynjącą się od wielkiej litery';
-    return false;
-  }
-}
-
-function getPhone() {
-    var error = document.getElementById('phoneNumberError');
-    error.innerHTML = '';
-  var phoneField = document.getElementById('address-phone');
-  phone = phoneField.value;
-  pattern = phoneField.pattern;
-  if (phone.match(pattern)) {
-    var jsonString = {};
-    var address = {
-      "phone": phone
-    };
-    jsonString.address = address;
-    return jsonString;
-  } else {
-    error.innerHTML = 'Wpisz poprawny numer telefonu';
-    return false;
-  }
+    return true;
 }
