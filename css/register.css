@@ -18,4 +18,8 @@
 }
 .error{
 	color:red;
+	font-size:small;
+}
+.btn{
+	float: center;
 }
