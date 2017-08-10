@@ -1,11 +1,17 @@
 function register() {
   var data = collectData();
+<<<<<<< HEAD
+=======
+  console.log(data);
+  data.captcha=grecaptcha.getResponse();
+>>>>>>> cce1524cdffd2690e2c340dcbf3a42833e318050
   if (data)
     $.ajax({
       url: 'http://localhost:8080/geoanalityka-web/rest/auth/register',
       type: 'POST',
       contentType: "application/json",
       dataType: 'json',
+<<<<<<< HEAD
       success: (function(data) {
         this.props.setPage(data);
       }).bind(this),
@@ -19,6 +25,14 @@ function register() {
           messageType: "alert-danger"
         });
       }).bind(this),
+=======
+        success: (function (data) {
+            console.log(data);
+        }),
+        error: (function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr);
+        }),
+>>>>>>> cce1524cdffd2690e2c340dcbf3a42833e318050
       data: JSON.stringify(data)
     });
   else return;
