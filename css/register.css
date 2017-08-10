@@ -1,36 +1,47 @@
-body{
-  background: url("../images/splash2.jpg") no-repeat;
+body {
   background-size: 100%;
-  padding:2%;
+  background: url("../images/splash2.jpg") no-repeat fixed center;
+}
 
+.container {
+  background: rgba(255, 255, 255, 0.6);
+  height: auto;
+  width: 90%;
+  padding: 2%;
 }
-.container
-{
-	background:rgba(255,255,255, 0.6);
-	height: auto;
-	width:auto;
-	padding:2%;
+
+.form-group,
+.g-recaptcha {
+  display: block;
 }
-.form-group, .g-recaptcha{
-	margin-top:0;
-	margin-bottom:0;
-	margin-right: auto;
-	margin-left: auto; 
-	max-width: 75%;
-	display: block;
+
+.form-group,
+h3 {
+  margin: 0;
+  max-width: 75%;
+  display: block;
 }
-.error{
-	color:red;
-	font-size:small;
+
+#button-section {
+  margin-top: 2%;
 }
-#przycisk{
-	margin:auto;
-	display: block;
+
+.error {
+  color: red;
+  font-size: small;
 }
-h1,h3{
-	text-align: center;
-	margin-top: 0;
+
+#przycisk {
+  margin: auto;
+  display: block;
 }
-.g-recaptcha{
-	margin-top:5%;
+
+h1,
+h3 {
+  text-align: center;
+  margin-top: 0;
+}
+
+.g-recaptcha {
+  margin-top: 5%;
 }
