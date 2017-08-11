@@ -1,13 +1,15 @@
 body {
   background-size: 100%;
   background: url("../images/splash2.jpg") no-repeat fixed center;
+  height:100%;
 }
 
-.container {
+#container {
   background: rgba(255, 255, 255, 0.6);
   height: auto;
   width: 90%;
   padding: 2%;
+  margin-left:5%;
 }
 
 .form-group,
@@ -20,10 +22,6 @@ h3 {
   margin: 0;
   max-width: 75%;
   display: block;
-}
-
-#button-section {
-  margin-top: 2%;
 }
 
 .error {
