@@ -65,6 +65,9 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
             // Do we offer guest access?
             handleUserSignin.availabilities.guest = appParams.showGuest;
 
+            handleUserSignin.availabilities.gisExpertLogin = appParams.gisExpertLogin;
+            handleUserSignin.availabilities.gisExpertRegister = appParams.gisExpertRegister;
+
             //........................................................................................................//
 
             // Attempt to initialize Facebook if wanted
@@ -169,16 +172,27 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
             return deferred;
         },
 
+        createGisExpertLoginForm: function(actionButtonContainer){
+            $(actionButtonContainer).empty();
+
+            $("<p><input type='text' class='span3' name='eid' id='email' placeholder='Email'></p>"+
+            "<p><input type='password' class='span3' name='passwd' placeholder='Password'></p>"+
+                "<p><button id='loginButton' type='submit' class='btn btn-primary'>Sign in</button>"+
+                "<a href='#'>Forgot Password?</a>"+
+            "</p>"
+            ).appendTo(actionButtonContainer);
+
+            $("#loginButton").on("click", function () {
+                console.log("hehe");
+            });
+        },
+
         initUI: function (actionButtonContainer) {
 
             if (handleUserSignin.availabilities.guest) {
                 $("<div id='guestSignin' class='splashInfoActionButton guestOfficialColor'>" +
                     "<span class='socialMediaIcon sprites guest-user_29'></span>" +
-                    i18n.labels.guestName + "</div>"+
-                    "<div id='rejestracja'> <a id='link' href='register.html'> <img src='images/register.png' alt=''>" +
-                    "<span style='display: block;'>Rejestracja</span> </a> </div>"+
-                    "<div id='logowanie'> <a id='logIn' href='logIn.html'> <img src='images/Login.png' alt=''>" +
-                    "<span style='display: block;'>Logowanie</span> </a> </div>"
+                    i18n.labels.guestName + "</div>"
                     ).appendTo(actionButtonContainer)
                 $("#guestSignin").on("click", function () {
                     handleUserSignin.loggedIn = true;
@@ -194,6 +208,21 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
                     // Update the calling app
                     handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
                 });
+            }
+
+            if (handleUserSignin.availabilities.gisExpertLogin) {
+                $("<div id='gisExpertLogin'><img src='images/Login.png' alt=''>" +
+                    "<span style='display: block;'>Logowanie</span> </a> </div>"
+                ).appendTo(actionButtonContainer);
+                $("#gisExpertLogin").on("click", function () {
+                    handleUserSignin.createGisExpertLoginForm(actionButtonContainer);
+                });
+            }
+
+            if (handleUserSignin.availabilities.gisExpertRegister) {
+                $("<div id='gisExpertRegister'> <a id='link' href='register.html'> <img src='images/register.png' alt=''>" +
+                    "<span style='display: block;'>Rejestracja</span> </a> </div>"
+                ).appendTo(actionButtonContainer);
             }
 
             if (handleUserSignin.availabilities.facebook) {

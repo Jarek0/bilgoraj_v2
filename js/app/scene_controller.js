@@ -391,10 +391,6 @@ define([
                             // Fill the slides container with the map's slides
                             var slides = scene_controller.map.presentation.slides;
                             slides.forEach(function (slide, slideNum) {
-                                console.log("// Slide #" + slideNum + ": " + slide.id);
-                                console.log("   title = " + JSON.stringify(slide.title) + ";");
-                                console.log("   scale = " + slide.viewpoint.scale + ";");
-                                console.log("   camera = " + JSON.stringify(slide.viewpoint.camera) + ";");
 
                                 // Slide frame and title; change the cursor to a pointer style when hovering
                                 // the mouse over the slide frame

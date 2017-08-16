@@ -305,11 +305,16 @@ define(["lib/i18n.min!nls/resources.js"],
                 var url, update;
 
                 // Post the packet
+                console.log("controller._config.featureSvcParams.url");
+                console.log(controller._config.featureSvcParams.url);
                 url = controller._config.featureSvcParams.url + "/applyEdits";
                 update = "f=json&id=" + controller._config.featureSvcParams.id +
                     "&adds=%5B" + controller._stringifyForApplyEdits(surveyPoint) + "%5D";
 
                 console.log("*** Submit " + JSON.stringify(surveyPoint) + " ***");
+                console.log("url i update");
+                console.log(url);
+                console.log(update);
                 $.post(url, update, function (results, status) {
                     console.log("*** POST status: " + status + "; " + JSON.stringify(results) + " ***");
 
