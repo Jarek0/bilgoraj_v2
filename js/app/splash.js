@@ -92,6 +92,10 @@ define(["lib/i18n.min!nls/resources.js", "app/diag"],
                 splash._replaceText($("#splashInfoPrompt"), text, thenDo, thenDoArg);
             },
 
+            showLoginError: function (text, thenDo, thenDoArg) {
+                splash._replaceText($("#loginErrorLog"), text, thenDo, thenDoArg);
+            },
+
             showActions: function () {
                 $("#splashInfoActions").fadeIn();
             },

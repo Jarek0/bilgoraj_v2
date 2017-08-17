@@ -36,7 +36,7 @@
             <div class="form-group ">
               <label for="email">Adres E-Mail</label>
               <input id="email" name="email" class="form-control" placeholder="Adres E-Mail" type="email" pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required>
-              <div id="emailError" class="error"></div>
+              <div id="usernameError" class="error"></div>
             </div>
             <hr>
             <div class="form-group ">
@@ -44,13 +44,14 @@
               <input id="password" class="form-control" placeholder="Hasło" type="password" data-minlength="6" data-minlength-error="Hasło powinno składać się z minimum 6 znaków" required>
               <div id="passwordError" class="error"></div>
             </div>
-            <div class="form-group ">
+            <div class="form-group">
               <label for="password-confirm">Powtórz hasło</label>
               <input id="password-confirm" class="form-control" placeholder="Powtórz hasło" type="password" required>
-              <div id="confirmError" class="error"></div>
+              <div id="confirmPasswordError" class="error"></div>
             </div>
             <div class="form-group " id="captcha">
               <div class="g-recaptcha" data-sitekey="6LelZAsTAAAAAAv1ADYDnq8AzbmPmbMvjh-xhfgB"></div>
+              <div id="captchaError" class="error"></div>
             </div>
           </div>
         </div>
@@ -70,16 +71,17 @@
             <div class="form-group ">
               <label for="address-office">Nr lokalu</label>
               <input id="address-office" class="form-control" placeholder="Nr lokalu" type="text">
+              <div id="flatNumberError" class="error"></div>
             </div>
             <div class="form-group ">
               <label for="address-zip">Kod pocztowy</label>
               <input id="address-zip" class="form-control" placeholder="Kod pocztowy" type="text" pattern="^[0-9]{2}-?[0-9]{3}$" required>
-              <div id="zipError" class="error"></div>
+              <div id="zipCodeError" class="error"></div>
             </div>
             <div class="form-group ">
               <label for="address-city">Miejscowość</label>
               <input id="address-city" class="form-control" placeholder="Miejscowość" type="text" pattern="(^[A-Z ÀÁÂÃÄÅ ĄŻŹ ÒÓÔÕÖØ Ł Ć ĘŚ Ń ÈÉÊË Ç ÌÍÎÏ ÙÚÛÜ Ñ]{1})([a-zàáâãäåąźżòóÓłćęśńôõöøèéêëçìíîïùúûüÿñ]{1,}$)" required>
-              <div id="cityNameError" class="error"></div>
+              <div id="cityError" class="error"></div>
             </div>
             <div class="form-group ">
               <label for="address-phone">Telefon</label>
@@ -88,16 +90,10 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div id="button-section" class="col-md-12 center-block">
-        <div class="form-group">
-          <div class="g-recaptcha" data-sitekey="6LelZAsTAAAAAAv1ADYDnq8AzbmPmbMvjh-xhfgB"></div>
-        </div>
-        <div id="captchaError" class="error"></div>
-        <div class="form-group">
-          <input id="registerButton" type="button" onclick="register()" class="btn btn-primary btn-lg" value="Zarejestruj">
+        <div id="button-section" class="col-md-12 center-block">
+          <div class="form-group">
+            <input id="registerButton" type="button" onclick="register()" class="btn btn-primary btn-lg" value="Zarejestruj">
+          </div>
         </div>
       </div>
     </div>

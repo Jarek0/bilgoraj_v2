@@ -172,28 +172,74 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
             return deferred;
         },
 
-        createGisExpertLoginForm: function(actionButtonContainer){
+        createGisExpertLoginForm: function(splash){
+            var actionButtonContainer= splash.getActionsContainer();
             $(actionButtonContainer).empty();
 
-            $("<p><input type='text' class='span3' name='eid' id='email' placeholder='Email'></p>"+
-            "<p><input type='password' class='span3' name='passwd' placeholder='Password'></p>"+
-                "<p><button id='loginButton' type='submit' class='btn btn-primary'>Sign in</button>"+
+            splash.replacePrompt("Logowanie");
+
+            $("<p><input id='email' type='text' name='eid' placeholder='Email'></p>"+
+                "<p><input id='password' type='password' name='password' placeholder='Password'></p>"+
+                "<p><button id='returnButton' type='button' class='btn btn-primary'>"+
+                "Return"+
+                "</button>" +
+                "<button id='loginButton' class='btn btn-primary'>Sign in</button>"+
                 "<a href='#'>Forgot Password?</a>"+
-            "</p>"
+                "</p>"
             ).appendTo(actionButtonContainer);
 
-            $("#loginButton").on("click", function () {
-                console.log("hehe");
+            $("#loginButton").on("click", function(){handleUserSignin.loginFormSubmit(splash)});
+            $("#returnButton").on("click", function(){
+                $(actionButtonContainer).empty();
+                handleUserSignin.initUI(splash);
             });
         },
 
-        initUI: function (actionButtonContainer) {
+
+        loginFormSubmit: function (splash) {
+            var email = $("#email").val();
+            var password = $("#password").val();
+            if(email==='' || password===''){
+                splash.showLoginError("Pola nie mogą być puste");
+            }
+            else
+            $.ajax({
+                url: "http://localhost:8080/geoanalityka-web/rest/auth/getToken",
+                dataType: "json",
+                type: "POST",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    username: email,
+                    password: password
+                }),
+                success: (function (data) {
+                    handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
+                    var exhours = 4;
+                    exhours = exhours || 3;
+                    var d = new Date();
+                    d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
+                    var expires = 'expires=' + d.toUTCString();
+                    document.cookie = "token" + '=' + encodeURIComponent(data.token) + '; ' + expires +
+                        "; path=/";
+                }),
+                error: (function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                    splash.showLoginError(JSON.parse(xhr.responseText).message);
+                })
+            })
+        },
+
+        initUI: function (splash) {
+            var actionButtonContainer= splash.getActionsContainer();
+
+            // Switch to the sign-in prompt
+            splash.replacePrompt(i18n.prompts.signIn, splash.showActions);
 
             if (handleUserSignin.availabilities.guest) {
                 $("<div id='guestSignin' class='splashInfoActionButton guestOfficialColor'>" +
                     "<span class='socialMediaIcon sprites guest-user_29'></span>" +
                     i18n.labels.guestName + "</div>"
-                    ).appendTo(actionButtonContainer)
+                ).appendTo(actionButtonContainer)
                 $("#guestSignin").on("click", function () {
                     handleUserSignin.loggedIn = true;
                     handleUserSignin.currentProvider = "guest";
@@ -215,7 +261,7 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
                     "<span style='display: block;'>Logowanie</span> </a> </div>"
                 ).appendTo(actionButtonContainer);
                 $("#gisExpertLogin").on("click", function () {
-                    handleUserSignin.createGisExpertLoginForm(actionButtonContainer);
+                    handleUserSignin.createGisExpertLoginForm(splash);
                 });
             }
 
@@ -285,9 +331,6 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
             return handleUserSignin.user;
         },
 
-        /**
-         * Signs the user out of the currently-active social medium provider.
-         */
         signOut: function () {
             if (handleUserSignin.isSignedIn()) {
                 switch (handleUserSignin.currentProvider) {
@@ -427,100 +470,6 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
                 handleUserSignin.statusCallback(handleUserSignin.notificationSignOut);
             }
         },
-
-        //------------------------------------------------------------------------------------------------------------//
-
-        /**
-         * Displays the Twitter login window.
-         * @param {boolean} [forceLogin] If false or omitted, sets up for login; if true, sets up for logout
-         * @private
-         */
-        showTwitterLoginWin: function (forceLogin) {
-            var baseUrl, package_path, redirect_uri, left, top, w, h;
-
-            baseUrl = handleUserSignin.appParams.twitterSigninUrl;
-            package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/"));
-            redirect_uri = encodeURIComponent(location.protocol + "//" + location.host +
-                package_path + handleUserSignin.appParams.twitterCallbackUrl);
-            left = (screen.width / 2) - (w / 2);
-            top = (screen.height / 2) - (h / 2);
-            w = screen.width / 2;
-            h = screen.height / 1.5;
-
-            baseUrl += "?";
-            if (forceLogin) {
-                baseUrl += "force_login=true";
-                if (redirect_uri) {
-                    baseUrl += "&";
-                }
-            }
-            if (redirect_uri) {
-                baseUrl += "redirect_uri=" + redirect_uri;
-            }
-
-            window.open(baseUrl, "twoAuth", "scrollbars=yes, resizable=yes, left=" + left +
-                ", top=" + top + ", width=" + w + ", height=" + h, true);
-            window.oAuthCallback = function () {
-                handleUserSignin.updateTwitterUser();
-            };
-        },
-
-        /**
-         * Updates the information held about the signed-in Twitter user.
-         * @param {object} [response] Service-specific response object
-         * @private
-         */
-        updateTwitterUser: function () {
-            var query = {
-                include_entities: true,
-                skip_status: true
-            };
-            $.ajax({
-                url: handleUserSignin.appParams.twitterUserUrl,
-                data: query,
-                dataType: "jsonp",
-                timeout: 10000,
-                success: function (data) {
-
-                    handleUserSignin.loggedIn = data && !data.hasOwnProperty("signedIn") && !data.signedIn;
-                    handleUserSignin.currentProvider = handleUserSignin.loggedIn ?
-                        "twitter" :
-                        "";
-
-                    if (handleUserSignin.loggedIn) {
-                        handleUserSignin.user = {
-                            name: data.name,
-                            id: data.id_str,
-                            org: "Twitter",
-                            canSubmit: true
-                        };
-
-                        // Update the calling app
-                        handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
-
-                        // Update the avatar
-                        if (!data.default_profile_image && data.profile_image_url_https) {
-                            handleUserSignin.user.avatar = data.profile_image_url_https;
-                            handleUserSignin.statusCallback(handleUserSignin.notificationAvatarUpdate);
-                        }
-                    }
-                    else {
-                        handleUserSignin.user = {};
-
-                        // Update the calling app
-                        handleUserSignin.statusCallback(handleUserSignin.notificationSignOut);
-                    }
-                },
-                error: function () {
-                    // handle an error condition
-                    handleUserSignin.loggedIn = false;
-
-                    // Update the calling app
-                    handleUserSignin.statusCallback(handleUserSignin.notificationSignOut);
-                }
-            }, "json");
-        }
-
     };
     return handleUserSignin;
     //----------------------------------------------------------------------------------------------------------------//
