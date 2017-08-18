@@ -149,7 +149,7 @@ define(["lib/i18n.min!nls/resources.js",
                     register_controller.emit();
                 });
             }
-    },
+        },
 
         createGisExpertLoginForm: function(){
             var actionButtonContainer= splash.getActionsContainer();
