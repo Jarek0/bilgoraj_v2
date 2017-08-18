@@ -1,4 +1,4 @@
-define(['js/app/register','js/app/handleUserSignin','js/app/user'], function(register,handleUserSignin, user) {
+define(['js/app/register','js/app/handleUserSignin','app/user'], function(register,handleUserSignin, user) {
   "use strict";
   var register_controller;
   register_controller = {
@@ -17,11 +17,11 @@ define(['js/app/register','js/app/handleUserSignin','js/app/user'], function(reg
             $.publish('registerUsr');
           });
           $('#comeBackButton').on('click',function(){
-          	$(register_controller.container).html("");
-          	$(register_controller.container).addClass('smallSidebar');
-          	$("link[href='css/register.css']").remove();
-          	handleUserSignin.availabilities.guest = true;
-          	user.launch(config,splash);
+          	var link = document.createElement('a');
+          	$(link).attr('href', 'index.html');
+          	$('body').append(link);
+          	link.click();
+          	link.remove();      
           });
         }
       })
