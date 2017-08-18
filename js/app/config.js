@@ -154,7 +154,6 @@ define(["lib/i18n.min!nls/resources.js", "app/fetchConfigInfo"],
 
             loadController: function () {
                 var appControllerName, controllerReady = $.Deferred();
-
                 appControllerName = "app/" + config.appParams.app + "_controller";
                 require([appControllerName], function (appController) {
                     var additionalUrlParamsFilter = appController.getAdditionalUrlParamsFilter();
