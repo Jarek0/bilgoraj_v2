@@ -44,9 +44,9 @@ h3 {
 .g-recaptcha {
   margin-top: 5%;
 }
-.styl{
+.styl {
   text-align: center;
-  input{
-    margin:auto;
-  }
+}
+input{
+  margin:auto;
 }

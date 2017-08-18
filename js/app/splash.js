@@ -108,6 +108,12 @@ define(["lib/i18n.min!nls/resources.js", "app/diag"],
                 return $("#splashInfoActions")[0];
             },
 
+            clearLoginForm: function () {
+                $("#loginSuccessLog").empty();
+                $("#loginErrorLog").empty();
+                $("#splashInfoActions").empty();
+            },
+
             //--------------------------------------------------------------------------------------------------------//
 
             _replaceText: function (item, text, thenDo, thenDoArg) {
