@@ -565,7 +565,6 @@ define(["lib/i18n.min!nls/resources.js",
         handleUserSignin.resend(username);
       });
       button.innerHTML = 'Wyślij ponownie';
-      $('#splashInfoActions').empty();
       $(button).appendTo(p);
       $(p).appendTo($('#splashInfoActions'));
     },
