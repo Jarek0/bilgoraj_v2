@@ -15,7 +15,7 @@
  | limitations under the License.
  */
 //====================================================================================================================//
-define(["lib/i18n.min!nls/resources.js","app/tokenUtil"], function (i18n, tokenUtil) {
+define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/tokenUtil"], function(i18n, register_controller) {
     "use strict";
     var handleUserSignin;
     handleUserSignin = {
@@ -284,6 +284,9 @@ define(["lib/i18n.min!nls/resources.js","app/tokenUtil"], function (i18n, tokenU
                 $("<div id='gisExpertRegister'> <a id='link' href='register.html'> <img src='images/register.png' alt=''>" +
                     "<span style='display: block;'>Rejestracja</span> </a> </div>"
                 ).appendTo(actionButtonContainer);
+                $("#gisExpertRegister").on("click", function() {
+                    register_controller.emit();
+                });
             }
 
             if (handleUserSignin.availabilities.facebook) {
@@ -304,29 +307,28 @@ define(["lib/i18n.min!nls/resources.js","app/tokenUtil"], function (i18n, tokenU
                 });
             }
 
-            if (handleUserSignin.availabilities.googleplus) {
-                $("<div id='googlePlusSignin' class='splashInfoActionButton googlePlusOfficialColor'>" +
-                    "<span class='socialMediaIcon sprites gp-29'></span>Google+</div>").appendTo(actionButtonContainer);
-                $("#googlePlusSignin").on("click", function () {
-                    if (handleUserSignin.googleAuth.isSignedIn.get()) {
-                        handleUserSignin.updateGooglePlusUser(true);
-                    }
-                    else {
-                        handleUserSignin.googleAuth.signIn();
-                    }
-                });
-            }
+      if (handleUserSignin.availabilities.googleplus) {
+        $("<div id='googlePlusSignin' class='splashInfoActionButton googlePlusOfficialColor'>" +
+          "<span class='socialMediaIcon sprites gp-29'></span>Google+</div>").appendTo(actionButtonContainer);
+        $("#googlePlusSignin").on("click", function() {
+          if (handleUserSignin.googleAuth.isSignedIn.get()) {
+            handleUserSignin.updateGooglePlusUser(true);
+          } else {
+            handleUserSignin.googleAuth.signIn();
+          }
+        });
+      }
 
-            if (handleUserSignin.availabilities.twitter) {
-                $("<div id='twitterSignin' class='splashInfoActionButton twitterOfficialColor'>" +
-                    "<span class='socialMediaIcon sprites Twitter_logo_blue_29'></span>" +
-                    "Twitter</div>").appendTo(actionButtonContainer);
-                $("#twitterSignin").on("click", function () {
-                    handleUserSignin.showTwitterLoginWin(false);
-                });
-            }
+      if (handleUserSignin.availabilities.twitter) {
+        $("<div id='twitterSignin' class='splashInfoActionButton twitterOfficialColor'>" +
+          "<span class='socialMediaIcon sprites Twitter_logo_blue_29'></span>" +
+          "Twitter</div>").appendTo(actionButtonContainer);
+        $("#twitterSignin").on("click", function() {
+          handleUserSignin.showTwitterLoginWin(false);
+        });
+      }
 
-        },
+    },
 
         /**
          * Returns the signed-in state.
