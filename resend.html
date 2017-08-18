@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="js/app/resend.js" type="text/javascript"></script>
+  <link href="js/lib/bootstrap.min.css" rel="stylesheet">
+  <link href="css/resend.css" rel="stylesheet">
+</head>
+
+<body>
+  <h1>Wyślij maila jeszcze raz</h1>
+  <div id="container">
+    <div class="loginField">
+      <h4>Zanim poprosisz o ponowne wysłanie sprawdź spam.Jeżeli nie otrzymałeś maila podaj nazwę użytkownika i wyślij jeszcze raz.</h4>
+      <div>
+        <label for="login">e-mail:</label>
+        <input id="login" type="text" placeholder="e-mail" />
+      </div>
+    </div>
+    <div id="error"></div>
+    <input type="button" id="send" value="Wyślij" class="btn btn-primary btn-lg" onclick="resend()" />
+  </div>
+</body>
+
+</html>

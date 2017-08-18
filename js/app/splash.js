@@ -77,7 +77,7 @@ define(["lib/i18n.min!nls/resources.js", "app/diag"],
             },
 
             setBackground: function (url) {
-                $("#splashPageBkgd").css("background-image", "url(" + url + ")").fadeIn(2000);
+                $("body").css({"background-image":"url(" + url + ")", 'background-size':'cover'}).fadeIn(2000);
             },
 
             replaceTitle: function (text, thenDo, thenDoArg) {

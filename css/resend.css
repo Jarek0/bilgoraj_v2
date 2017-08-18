@@ -1,0 +1,53 @@
+body {
+  background: url("../images/splash2.jpg")no-repeat center fixed; 
+    background-size: cover;
+  
+}
+#container
+{
+	background:rgba(255,255,255, 0.6);
+	height: auto;
+	margin-bottom: auto;
+	margin-top: auto;
+	margin-right: auto;
+	margin-left: auto;
+	width:50%;
+	height: auto;
+	padding: 2%;
+}
+#error{
+	color:red;
+	font-size:small;
+}
+label,h1{
+	margin: 3%;
+	text-align: center;
+}
+h1,#przycisk{	
+	display: block;
+	width:auto;
+}
+input, #przycisk{
+	margin: auto;
+}
+@media only screen and (max-width: 800px) 
+{
+	#container{
+		width:70%;
+	}
+}
+#changePass{
+	text-align: center;
+}
+div{
+	margin:3%;
+	text-align: center;
+	display: block;
+}
+#login{
+	width: 50%;
+}
+#send{
+	padding-top:5px;
+	padding-bottom: 5px;
+}

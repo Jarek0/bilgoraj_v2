@@ -1,40 +1,58 @@
 body {
-  background: url("../images/splash2.jpg") no-repeat;
-  background-size: 100%;
-  padding:2%;
+  background: url("../images/splash2.jpg")no-repeat center fixed;
+  background-size: cover;
 }
-.container
-{
-	background:rgba(255,255,255, 0.6);
-	height: auto;
-	width:35%;
-	margin-bottom: auto;
-	margin-top: auto;
 
+#container {
+  background: rgba(255, 255, 255, 0.6);
+  height: auto;
+  width: 35%;
+  margin-bottom: auto;
+  margin-top: auto;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 2%;
 }
-.error{
-	color:red;
-	font-size:small;
+
+.error {
+  color: red;
+  font-size: small;
 }
-label,h1{
-	text-align: center;
+
+label,
+h1 {
+  text-align: center;
 }
-label,input,h1,#przycisk{	
-	display: block;
-	width:auto;
+
+label,
+input,
+h1,
+#przycisk {
+  display: block;
+  width: auto;
 }
-input, #przycisk{
-	margin: auto;
+
+input,
+#przycisk {
+  margin: auto;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
-@media only screen and (max-width: 600px) 
-{
-	.container{
-		width:auto;
-	}
+
+@media only screen and (max-width: 600px) {
+  body {
+    height: 100%;
+  }
+  #container {
+    width: auto;
+  }
 }
-#changePass{
-	text-align: center;
+
+#changePass {
+  text-align: center;
 }
-div{
-	display: block;
+
+div {
+  text-align: center;
+  display: block;
 }

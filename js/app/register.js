@@ -1,5 +1,6 @@
-function register() {
+$.subscribe('registerUsr', function() {
   var data = collectData();
+
   var errors = validateData(data);
   if (!isEmptyObject(errors)) {
     showErrors(errors)
@@ -7,8 +8,7 @@ function register() {
     sendRequest(data);
     clearErrorsFields();
   }
-}
-
+});
 
 
 function clearErrorsFields() {
@@ -71,7 +71,7 @@ function validateData(data) {
   if (!(data.address.buildingNumber.value).match(data.address.buildingNumber.pattern)) {
     errors.buildingNumber = 'Numer budynku ma nieprawidłowy format'
   }
-  if (data.address.flatNumber.value !='' && !(data.address.flatNumber.value).match(data.address.flatNumber.pattern)) {
+  if (data.address.flatNumber.value != '' && !(data.address.flatNumber.value).match(data.address.flatNumber.pattern)) {
     errors.flatNumber = 'Numer lokalu ma nieprawidłowy format'
   }
   if (!(data.address.zipCode.value).match(data.address.zipCode.pattern)) {
@@ -113,8 +113,8 @@ function sendRequest(validatedData) {
     contentType: "application/json",
     dataType: 'json',
     success: (function(data) {
+      alert('Rejestracja konta ' + data.message + ' powiodła się!');
       console.log(data);
-      wyczysc();
     }),
     error: (function(xhr, ajaxOptions, thrownError) {
       showErrors(JSON.parse(JSON.parse(xhr.responseText).message))
@@ -130,34 +130,4 @@ function isEmptyObject(obj) {
     }
   }
   return true;
-}
-function wyczysc(data){
-  var container = document.getElementById('container');
-  container.innerHTML='';
-  dodajWiadomosc(container, data);
-}
-function dodajWiadomosc(pole){
-  pole.innerHTML='Rejestracja zakończona sukcesem!'+
-  'Potwierdz e-mail. Jeżeli nie widzisz sprawdź spam'+
-  ', jeżeli i tam nie ma kliknij poniższy przycisk';
-  var przycisk = document.createElement('input');
-  przyciks.type='button';
-  przycisk.value='Wyślij maila znowu';
-  przycisk.class='btn btn-primary btn-lg';
-  //przycisk.onclick = function(){resend(data)};
-}
-function resend (data){
-  $.ajax({
-    url: 'http://localhost:8080/geoanalityka-web/service/Mailservice/resendMail',
-    type: 'POST',
-    contentType: "application/json",
-    dataType: 'json',
-    success: (function(data) {
-      console.log(data);
-    }),
-    error: (function(xhr, ajaxOptions, thrownError) {
-      showErrors(JSON.parse(JSON.parse(xhr.responseText).message))
-    }),
-    data: data.message
-  });
 }
