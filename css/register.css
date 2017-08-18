@@ -1,14 +1,14 @@
-body {
-  padding: 3%;
+body{
+  padding:3%;
 }
-
 #splashInfoPanel {
   text-align: center;
   background: rgba(255, 255, 255, 0.6);
   height: auto;
   width: auto;
   margin: auto;
-  padding: 1% 3%;
+  padding-left:3%;
+  padding-bottom: 1%;
 }
 
 .form-group,
@@ -16,13 +16,9 @@ body {
   display: block;
 }
 
-.form-button {
-  margin: auto;
-}
-
 .form-group,
 h3 {
-  margin: 0 auto;
+  margin: 0;
   max-width: 75%;
   display: block;
 }
@@ -30,6 +26,13 @@ h3 {
 .error {
   color: red;
   font-size: small;
+}
+
+#registerButton {
+  margin: 20px auto;
+  display: block;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 h1,
@@ -41,9 +44,9 @@ h3 {
 .g-recaptcha {
   margin-top: 5%;
 }
-
-.col-md-6{
+.styl {
   text-align: center;
-  
 }
-
+input{
+  margin:auto;
+}

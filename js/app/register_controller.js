@@ -9,7 +9,7 @@ define(['js/app/register','js/app/handleUserSignin','app/user'], function(regist
       register_controller.container = $("#" + _container + "");
       $(register_controller.container).empty();
       var registerControllerReady = $.Deferred();
-      register_controller.container.loadTemplate('register.html', {}, {
+      register_controller.container.loadTemplate('js/app/register.html', {}, {
         prepend: true,
         complete: function() {
           registerControllerReady.resolve();
