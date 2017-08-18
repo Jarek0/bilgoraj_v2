@@ -15,7 +15,7 @@
  | limitations under the License.
  */
 //====================================================================================================================//
-define(["lib/i18n.min!nls/resources.js"], function (i18n) {
+define(["lib/i18n.min!nls/resources.js","app/tokenUtil"], function (i18n, tokenUtil) {
     "use strict";
     var handleUserSignin;
     handleUserSignin = {
@@ -181,10 +181,9 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
             $("<p><input id='email' type='text' name='eid' placeholder='Email'></p>"+
                 "<p><input id='password' type='password' name='password' placeholder='Password'></p>"+
                 "<p><button id='returnButton' type='button' class='btn btn-primary'>"+
-                "Return"+
-                "</button>" +
-                "<button id='loginButton' class='btn btn-primary'>Sign in</button>"+
-                "<a href='#'>Forgot Password?</a>"+
+                "Powrót</button>" +
+                "<button id='loginButton' class='btn btn-primary'>Login</button>"+
+                "<a id='forgotPasswordLink' href='#'>Zapomniałeś hasła?</a>"+
                 "</p>"
             ).appendTo(actionButtonContainer);
 
@@ -193,40 +192,32 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
                 $(actionButtonContainer).empty();
                 handleUserSignin.initUI(splash);
             });
+            $("#forgotPasswordLink").on("click", function(){
+                $(actionButtonContainer).empty();
+                handleUserSignin.createForgotPasswordForm(splash);
+            });
         },
 
+        createForgotPasswordForm: function (splash){
+            var actionButtonContainer= splash.getActionsContainer();
+            splash.replacePrompt("Resetowanie hasła");
 
-        loginFormSubmit: function (splash) {
-            var email = $("#email").val();
-            var password = $("#password").val();
-            if(email==='' || password===''){
-                splash.showLoginError("Pola nie mogą być puste");
-            }
-            else
-            $.ajax({
-                url: "http://localhost:8080/geoanalityka-web/rest/auth/getToken",
-                dataType: "json",
-                type: "POST",
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    username: email,
-                    password: password
-                }),
-                success: (function (data) {
-                    handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
-                    var exhours = 4;
-                    exhours = exhours || 3;
-                    var d = new Date();
-                    d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
-                    var expires = 'expires=' + d.toUTCString();
-                    document.cookie = "token" + '=' + encodeURIComponent(data.token) + '; ' + expires +
-                        "; path=/";
-                }),
-                error: (function (xhr, ajaxOptions, thrownError) {
-                    console.log(xhr);
-                    splash.showLoginError(JSON.parse(xhr.responseText).message);
-                })
-            })
+            $("<p><input id='email' type='text' name='eid' placeholder='Email'></p>"+
+                "<p><button id='returnButton' type='button' class='btn btn-primary'>"+
+                "Powrót"+
+                "</button>" +
+                "<button id='forgotPasswordButton' class='btn btn-primary'>Reset</button>"+
+                "</p>"
+            ).appendTo(actionButtonContainer);
+
+            $("#returnButton").on("click", function(){
+                $(actionButtonContainer).empty();
+                handleUserSignin.createGisExpertLoginForm(splash);
+            });
+
+            $("#forgotPasswordButton").on("click", function(){
+                handleUserSignin.resetPassword(splash);
+            });
         },
 
         initUI: function (splash) {
@@ -235,11 +226,35 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
             // Switch to the sign-in prompt
             splash.replacePrompt(i18n.prompts.signIn, splash.showActions);
 
+            var URLparams = tokenUtil.getAllUrlParams(window.location.href);
+            console.log(URLparams);
+            if(URLparams.resettoken!==undefined){
+                $("<p><input id='password' type='password' name='password' placeholder='Password'></p>"+
+                    "<p><input id='passwordConfirm' type='password' name='passwordConfirm' placeholder='confirm password'></p>"+
+                    "<p><button id='returnButton' type='button' class='btn btn-primary'>"+
+                    "Powrót</button>" +
+                    "<button id='changePasswordButton' class='btn btn-primary'>Zmień hasło</button>"+
+                    "</p>"
+                ).appendTo(actionButtonContainer);
+
+                $("#returnButton").on("click", function(){
+                    $(actionButtonContainer).empty();
+                    history.pushState({}, null, tokenUtil.removeURLParameter(window.location.href,'resetToken'));
+                    handleUserSignin.createGisExpertLoginForm(splash);
+                });
+
+                $("#changePasswordButton").on("click", function(){
+                    handleUserSignin.changePassword(splash,URLparams.resettoken);
+                });
+
+                return;
+            }
+
             if (handleUserSignin.availabilities.guest) {
                 $("<div id='guestSignin' class='splashInfoActionButton guestOfficialColor'>" +
                     "<span class='socialMediaIcon sprites guest-user_29'></span>" +
                     i18n.labels.guestName + "</div>"
-                ).appendTo(actionButtonContainer)
+                ).appendTo(actionButtonContainer);
                 $("#guestSignin").on("click", function () {
                     handleUserSignin.loggedIn = true;
                     handleUserSignin.currentProvider = "guest";
@@ -469,6 +484,86 @@ define(["lib/i18n.min!nls/resources.js"], function (i18n) {
             else {
                 handleUserSignin.statusCallback(handleUserSignin.notificationSignOut);
             }
+        },
+
+        loginFormSubmit: function (splash) {
+            var email = $("#email").val();
+            var password = $("#password").val();
+            if(email==='' || password===''){
+                splash.showLoginError("Pola nie mogą być puste");
+            }
+            else
+                $.ajax({
+                    url: "http://localhost:8080/geoanalityka-web/rest/auth/getToken",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        username: email,
+                        password: password
+                    }),
+                    success: (function (data) {
+                        handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
+                        tokenUtil.setCookie("token", data.token, 4);
+                    }),
+                    error: (function (xhr, ajaxOptions, thrownError) {
+                        console.log(xhr);
+                        splash.showLoginError(JSON.parse(xhr.responseText).message);
+                    })
+                })
+        },
+
+        resetPassword: function (splash) {
+            var email = $("#email").val();
+            if(email===''){
+                splash.showLoginError("Pole nie może być puste");
+            }
+            else
+                $.ajax({
+                    url: "http://localhost:8080/geoanalityka-web/rest/auth/resetPassword",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        username: email
+                    }),
+                    success: (function (data) {
+                        splash.showLoginSuccess(data.message);
+                    }),
+                    error: (function (xhr, ajaxOptions, thrownError) {
+                        splash.showLoginError(JSON.parse(xhr.responseText).message);
+                    })
+                })
+        },
+
+        changePassword: function (splash,token) {
+            var passwordConfirm = $("#passwordConfirm").val();
+            var password = $("#password").val();
+            if(passwordConfirm==='' || confirm===''){
+                splash.showLoginError("Pola nie mogą być puste");
+            }
+            else if(passwordConfirm!==password){
+                splash.showLoginError("Podane hasła nie są zgodne");
+            }
+            else
+                $.ajax({
+                    url: "http://localhost:8080/geoanalityka-web/rest/auth/changePassword",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        password: password,
+                        confirmPassword: passwordConfirm,
+                        resetPasswordToken: token
+                    }),
+                    success: (function (data) {
+                        splash.showLoginSuccess(data.message);
+                    }),
+                    error: (function (xhr, ajaxOptions, thrownError) {
+                        console.log(xhr);
+                        splash.showLoginError(JSON.parse(xhr.responseText).message);
+                    })
+                })
         },
     };
     return handleUserSignin;
