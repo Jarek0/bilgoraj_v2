@@ -81,7 +81,7 @@ define(["lib/i18n.min!nls/resources.js", "app/handleUserSignin", "app/diag", 'ap
                 // When the social media connections are ready, we can enable the social-media sign-in buttons
                 userSigninReady.then(function () {
                     // Add the sign-in buttons
-                    handleUserSignin.initUI(splash);
+                    handleUserSignin.initUI();
 
                 }, function () {
                     // Switch to the no-logins message

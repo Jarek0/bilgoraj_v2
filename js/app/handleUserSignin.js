@@ -15,7 +15,9 @@
  | limitations under the License.
  */
 //====================================================================================================================//
-define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/tokenUtil"], function(i18n, register_controller) {
+define(["lib/i18n.min!nls/resources.js",
+    "js/app/register_controller",
+    "app/tokenUtil","app/splash"], function(i18n, register_controller, tokenUtil, splash) {
     "use strict";
     var handleUserSignin;
     handleUserSignin = {
@@ -172,7 +174,7 @@ define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/toke
             return deferred;
         },
 
-        createGisExpertLoginForm: function(splash){
+        createGisExpertLoginForm: function(){
             var actionButtonContainer= splash.getActionsContainer();
             $(actionButtonContainer).empty();
 
@@ -187,18 +189,18 @@ define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/toke
                 "</p>"
             ).appendTo(actionButtonContainer);
 
-            $("#loginButton").on("click", function(){handleUserSignin.loginFormSubmit(splash)});
+            $("#loginButton").on("click", function(){handleUserSignin.loginFormSubmit()});
             $("#returnButton").on("click", function(){
                 $(actionButtonContainer).empty();
-                handleUserSignin.initUI(splash);
+                handleUserSignin.initUI();
             });
             $("#forgotPasswordLink").on("click", function(){
                 $(actionButtonContainer).empty();
-                handleUserSignin.createForgotPasswordForm(splash);
+                handleUserSignin.createForgotPasswordForm();
             });
         },
 
-        createForgotPasswordForm: function (splash){
+        createForgotPasswordForm: function (){
             var actionButtonContainer= splash.getActionsContainer();
             splash.replacePrompt("Resetowanie hasła");
 
@@ -212,15 +214,15 @@ define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/toke
 
             $("#returnButton").on("click", function(){
                 $(actionButtonContainer).empty();
-                handleUserSignin.createGisExpertLoginForm(splash);
+                handleUserSignin.createGisExpertLoginForm();
             });
 
             $("#forgotPasswordButton").on("click", function(){
-                handleUserSignin.resetPassword(splash);
+                handleUserSignin.resetPassword();
             });
         },
 
-        initUI: function (splash) {
+        initUI: function () {
             var actionButtonContainer= splash.getActionsContainer();
 
             // Switch to the sign-in prompt
@@ -240,11 +242,11 @@ define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/toke
                 $("#returnButton").on("click", function(){
                     $(actionButtonContainer).empty();
                     history.pushState({}, null, tokenUtil.removeURLParameter(window.location.href,'resetToken'));
-                    handleUserSignin.createGisExpertLoginForm(splash);
+                    handleUserSignin.createGisExpertLoginForm();
                 });
 
                 $("#changePasswordButton").on("click", function(){
-                    handleUserSignin.changePassword(splash,URLparams.resettoken);
+                    handleUserSignin.changePassword(URLparams.resettoken);
                 });
 
                 return;
@@ -276,13 +278,13 @@ define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/toke
                     "<span style='display: block;'>Logowanie</span> </a> </div>"
                 ).appendTo(actionButtonContainer);
                 $("#gisExpertLogin").on("click", function () {
-                    handleUserSignin.createGisExpertLoginForm(splash);
+                    handleUserSignin.createGisExpertLoginForm();
                 });
             }
 
             if (handleUserSignin.availabilities.gisExpertRegister) {
-                $("<div id='gisExpertRegister'> <a id='link' href='register.html'> <img src='images/register.png' alt=''>" +
-                    "<span style='display: block;'>Rejestracja</span> </a> </div>"
+                $("<div id='gisExpertRegister'><img src='images/register.png' alt=''>" +
+                    "<span style='display: block;'>Rejestracja</span></div>"
                 ).appendTo(actionButtonContainer);
                 $("#gisExpertRegister").on("click", function() {
                     register_controller.emit();
@@ -316,15 +318,6 @@ define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/toke
           } else {
             handleUserSignin.googleAuth.signIn();
           }
-        });
-      }
-
-      if (handleUserSignin.availabilities.twitter) {
-        $("<div id='twitterSignin' class='splashInfoActionButton twitterOfficialColor'>" +
-          "<span class='socialMediaIcon sprites Twitter_logo_blue_29'></span>" +
-          "Twitter</div>").appendTo(actionButtonContainer);
-        $("#twitterSignin").on("click", function() {
-          handleUserSignin.showTwitterLoginWin(false);
         });
       }
 
@@ -488,7 +481,7 @@ define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/toke
             }
         },
 
-        loginFormSubmit: function (splash) {
+        loginFormSubmit: function () {
             var email = $("#email").val();
             var password = $("#password").val();
             if(email==='' || password===''){
@@ -515,7 +508,7 @@ define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/toke
                 })
         },
 
-        resetPassword: function (splash) {
+        resetPassword: function () {
             var email = $("#email").val();
             if(email===''){
                 splash.showLoginError("Pole nie może być puste");
@@ -538,7 +531,7 @@ define(["lib/i18n.min!nls/resources.js", "js/app/register_controller", "app/toke
                 })
         },
 
-        changePassword: function (splash,token) {
+        changePassword: function (token) {
             var passwordConfirm = $("#passwordConfirm").val();
             var password = $("#password").val();
             if(passwordConfirm==='' || confirm===''){
