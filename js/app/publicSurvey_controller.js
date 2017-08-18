@@ -121,16 +121,20 @@ define(["lib/i18n.min!nls/resources.js"],
                 $.subscribe("survey-form-is-empty", function () {
                     controller._surveyInProgress = false;
                 });
+                
 
-                require(["app/survey", "app/survey_controller", "app/scene_controller", "app/message"],
-                    function (survey, survey_controller, scene_controller, message) {
+                
+                require(["app/survey", "app/survey_controller", "app/scene_controller", "app/message", "app/register_controller"],
+                    function (survey, survey_controller, scene_controller, message, register_controller) {
                         // Prepare the survey
                         controller._config.appParams._surveyDefinition = survey.createSurveyDefinition(
                             controller._config.featureSvcParams.popupDescription,
                             controller._config.featureSvcParams.fields,
                             controller._config.appParams.surveyNotificationPolicy, i18n.tooltips.importantQuestion
                         );
-
+                        $.subscribe('showRegisterPanel', function(){
+                            controller._loadCSS('css/register.css');
+                            register_controller.init('splashInfoPanel');});
                         // Prepare and start the scene controller
                         controller._loadCSS("//js.arcgis.com/4.1/esri/css/main.css");
                         controller._loadCSS("//js.arcgis.com/4.1/dijit/themes/claro/claro.css");

@@ -21,8 +21,8 @@
  * @namespace user
  * @version 0.1
  */
-define(["lib/i18n.min!nls/resources.js", "app/handleUserSignin", "app/diag"],
-    function (i18n, handleUserSignin, diag) {
+define(["lib/i18n.min!nls/resources.js", "app/handleUserSignin", "app/diag", 'app/register_controller'],
+    function (i18n, handleUserSignin, diag, register_controller) {
         "use strict";
         var user = {
             //----- Events -------------------------------------------------------------------------------------------//
@@ -60,7 +60,8 @@ define(["lib/i18n.min!nls/resources.js", "app/handleUserSignin", "app/diag"],
 
             launch: function (config, splash) {
                 splash.replacePrompt(i18n.messages.signinFetching);
-
+                register_controller.config = config;
+                register_controller.splash = splash;
                 // Start up the social media connections
                 var userSigninReady = handleUserSignin.init(config.appParams, function (notificationType) {
                     // Callback from current social medium
