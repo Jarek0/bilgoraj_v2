@@ -27,7 +27,7 @@
             <input id="password" class="form-control" placeholder="Hasło" type="password" data-minlength="6" data-minlength-error="Hasło powinno składać się z minimum 6 znaków" required>
             <div id="passwordError" class="error"></div>
           </div>
-          <div class="form-group ">
+          <div class="form-group">
             <label for="password-confirm">Powtórz hasło</label>
             <input id="password-confirm" class="form-control" placeholder="Powtórz hasło" type="password" required>
             <div id="confirmPasswordError" class="error"></div>
@@ -48,13 +48,13 @@
           </div>
           <div class="form-group ">
             <label for="address-number">Nr budynku</label>
-            <input id="address-number" class="form-control" placeholder="Nr budynku" type="text" pattern="[0-9]{1,}" required>
+            <input id="address-number" class="form-control" placeholder="Nr budynku" type="text" required>
             <div id="buildingNumberError" class="error"></div>
           </div>
           <div class="form-group ">
             <label for="address-office">Nr lokalu</label>
             <input id="address-office" class="form-control" placeholder="Nr lokalu" type="text">
-            <div id="flatNumberError"></div>
+            <div id="flatNumberError" class="error"></div>
           </div>
           <div class="form-group ">
             <label for="address-zip">Kod pocztowy</label>
@@ -69,7 +69,7 @@
           <div class="form-group ">
             <label for="address-phone">Telefon</label>
             <input id="address-phone" class="form-control" placeholder="Telefon" type="text" pattern="^(\(?\+?[0-9]{1,3}\)?)? ?[0-9 \-]{7,20}$" required>
-            <div id="phoneError" class="error"></div>
+            <div id="phoneNumberError" class="error"></div>
           </div>
         </div>
         <div style="display:block;">
@@ -81,8 +81,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div id="button-section" class="col-md-12 center-block">
     </div>
   </div>
 </section>

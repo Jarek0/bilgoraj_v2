@@ -11,6 +11,9 @@
     "showGuest": true,
     "allowGuestSubmissions": true,
 
+    "gisExpertLogin":true,
+    "gisExpertRegister":true,
+
     "showFacebook": false,
     "facebookAppId": "",
 

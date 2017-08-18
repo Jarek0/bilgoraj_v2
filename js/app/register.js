@@ -10,18 +10,18 @@ $.subscribe('registerUsr', function() {
   }
 });
 
-
-function clearErrorsFields() {
-  document.getElementById('firstnameError').innerHTML = "";
-  document.getElementById('lastnameError').innerHTML = "";
-  document.getElementById('usernameError').innerHTML = "";
-  document.getElementById('confirmPasswordError').innerHTML = "";
-  document.getElementById('buildingNumberError').innerHTML = "";
-  document.getElementById('flatNumberError').innerHTML = "";
-  document.getElementById('zipCodeError').innerHTML = "";
-  document.getElementById('cityError').innerHTML = "";
-  document.getElementById('captchaError').innerHTML = "";
-  grecaptcha.reset();
+function clearErrorsFields(){
+    document.getElementById('firstnameError').innerHTML="";
+    document.getElementById('lastnameError').innerHTML="";
+    document.getElementById('usernameError').innerHTML="";
+    document.getElementById('confirmPasswordError').innerHTML="";
+    document.getElementById('buildingNumberError').innerHTML="";
+    document.getElementById('flatNumberError').innerHTML="";
+    document.getElementById('zipCodeError').innerHTML="";
+    document.getElementById('streetError').innerHTML="";
+    document.getElementById('cityError').innerHTML="";
+    document.getElementById('captchaError').innerHTML="";
+    grecaptcha.reset();
 }
 
 function collectData() {
