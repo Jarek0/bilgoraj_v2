@@ -88,7 +88,6 @@ define(["lib/i18n.min!nls/resources.js",
 
             var URLparams = tokenUtil.getAllUrlParams(window.location.href);
 
-            console.log(URLparams);
             if(URLparams.resettoken!==undefined){
                 $("<p><input id='password' type='password' name='password' placeholder='Password'></p>"+
                     "<p><input id='passwordConfirm' type='password' name='passwordConfirm' placeholder='confirm password'></p>"+
@@ -124,7 +123,7 @@ define(["lib/i18n.min!nls/resources.js",
                         name: i18n.labels.guestName,
                         id: "",
                         org: "_guest_",
-                        canSubmit: handleUserSignin.appParams.allowGuestSubmissions
+                        canSubmit: false
                     };
 
                     // Update the calling app
@@ -133,8 +132,8 @@ define(["lib/i18n.min!nls/resources.js",
             }
 
             if (handleUserSignin.availabilities.gisExpertLogin) {
-                $("<div id='gisExpertLogin'><img src='images/Login.png' alt=''>" +
-                    "<span style='display: block;'>Logowanie</span> </a> </div>"
+                $("<div id='gisExpertLogin' class='splashInfoActionButton'><img src='images/Login.png' alt=''>" +
+                    "<span style='display: block;'>Logowanie</span></div>"
                 ).appendTo(actionButtonContainer);
                 $("#gisExpertLogin").on("click", function () {
                     handleUserSignin.createGisExpertLoginForm();
@@ -142,7 +141,7 @@ define(["lib/i18n.min!nls/resources.js",
             }
 
             if (handleUserSignin.availabilities.gisExpertRegister) {
-                $("<div id='gisExpertRegister'><img src='images/register.png' alt=''>" +
+                $("<div id='gisExpertRegister' class='splashInfoActionButton'><img src='images/register.png' alt=''>" +
                     "<span style='display: block;'>Rejestracja</span></div>"
                 ).appendTo(actionButtonContainer);
                 $("#gisExpertRegister").on("click", function() {
@@ -259,12 +258,11 @@ define(["lib/i18n.min!nls/resources.js",
                     success: (function (data) {
                         handleUserSignin.loggedIn = true;
                         handleUserSignin.currentProvider = "gisExpert";
-
                         handleUserSignin.user = {
                             name: data.firstname+" "+data.lastname,
                             id: data.token,
                             org: "gisExpert",
-                            canSubmit: handleUserSignin.appParams.allowGuestSubmissions
+                            canSubmit: true
                         };
 
                         // Update the calling app

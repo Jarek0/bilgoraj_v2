@@ -3,7 +3,7 @@ $.subscribe('registerUsr', function() {
 
   var errors = validateData(data);
   if (!isEmptyObject(errors)) {
-    showErrors(errors)
+      showValidationErrors(errors)
   } else {
     sendRequest(data);
     clearErrorsFields();
@@ -83,10 +83,14 @@ function validateData(data) {
   return errors;
 }
 
-function showErrors(errors) {
+function showValidationErrors(errors) {
   Object.keys(errors).map(function(key, index) {
     document.getElementById(key + 'Error').innerHTML = errors[key];
   });
+}
+
+function showServerError(error){
+    document.getElementById('serverError').innerHTML = error;
 }
 
 function sendRequest(validatedData) {
@@ -117,7 +121,11 @@ function sendRequest(validatedData) {
       console.log(data);
     }),
     error: (function(xhr, ajaxOptions, thrownError) {
-      showErrors(JSON.parse(JSON.parse(xhr.responseText).message))
+      console.log(xhr);
+        if(xhr.statusText.toLocaleLowerCase()==='internal server error')
+            showServerError(JSON.parse(xhr.responseText).message);
+        else
+            showValidationErrors(JSON.parse(JSON.parse(xhr.responseText).message))
     }),
     data: JSON.stringify(data)
   });
