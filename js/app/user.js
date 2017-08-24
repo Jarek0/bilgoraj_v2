@@ -60,8 +60,6 @@ define(["lib/i18n.min!nls/resources.js", "app/handleUserSignin", "app/diag", 'ap
 
             launch: function (config, splash) {
                 splash.replacePrompt(i18n.messages.signinFetching);
-                register_controller.config = config;
-                register_controller.splash = splash;
                 // Start up the social media connections
                 var userSigninReady = handleUserSignin.init(config.appParams, function (notificationType) {
                     // Callback from current social medium
@@ -74,6 +72,9 @@ define(["lib/i18n.min!nls/resources.js", "app/handleUserSignin", "app/diag", 'ap
                             break;
                         case handleUserSignin.notificationAvatarUpdate:
                             $.publish("avatar-update", handleUserSignin.getUser().avatar);
+                            break;
+                        case handleUserSignin.notificationRegister:
+                            $.publish("start-register");
                             break;
                     }
                 });

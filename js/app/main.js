@@ -15,14 +15,15 @@
  | limitations under the License.
  */
 //====================================================================================================================//
-define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag"],
-    function (i18n, config, splash, diag) {
+define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag", "app/register_controller"],
+    function (i18n, config, splash, diag, register_contoller) {
         "use strict";
         var main = {
             //--------------------------------------------------------------------------------------------------------//
 
             init: function () {
                 // Config tells us app specifics in addition to app's parameters
+
                 config.init().then(
                     function () {
                         document.title = config.appParams.titleText;
@@ -43,8 +44,6 @@ define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag"]
                 );
             },
 
-            //--------------------------------------------------------------------------------------------------------//
-
             _launch: function () {
                 // Load the app specifics
                 splash.replacePrompt(i18n.messages.loadingApp);
@@ -60,7 +59,9 @@ define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag"]
                                 signinReady.resolve(user);
                             });
 
-                            appReady = appController.init(config, $("body"));
+                            var body =$("body");
+
+                            appReady = appController.init(config, body);
 
                             // Wire up coordination between splash/signin and rest of app
                             $.subscribe("signedIn-user", function (ignore, loginInfo) {
@@ -70,7 +71,22 @@ define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag"]
 
                             $.subscribe("signedOut-user", function () {
                                 diag.appendWithLF("signed out"); //???
-                                appController.show(false, splash.show, true);
+                                splash.show(false, appController.show, true);
+                            });
+
+                            $.subscribe("start-register", function () {
+                                diag.appendWithLF("registration start");
+                                register_contoller.show(body);
+                            });
+
+                            $.subscribe("register-success", function () {
+                                diag.appendWithLF("registration success");
+                                window.location.replace('?registerSuccess=true');
+                            });
+
+                            $.subscribe("register-stop", function () {
+                                diag.appendWithLF("registration stop");
+                                window.location.replace('');
                             });
 
                             // Run app components
@@ -124,7 +140,6 @@ define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag"]
                 }
                 return details;
             }
-
             //--------------------------------------------------------------------------------------------------------//
         };
         main.init();

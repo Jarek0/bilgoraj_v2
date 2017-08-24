@@ -27,7 +27,8 @@ define(["lib/i18n.min!nls/resources.js", "app/diag"],
                 // When the DOM is ready, we can start adjusting the UI
                 $().ready(function () {
                     // Instantiate the splash template
-                    $("body").loadTemplate("js/app/splash.html", {
+                    var body = $("body");
+                    body.loadTemplate("js/app/splash.html", {
                         splashInfoTitle: config.appParams.titleText,
                         splashInfoBody: config.appParams.splashText
                     }, {
@@ -92,12 +93,18 @@ define(["lib/i18n.min!nls/resources.js", "app/diag"],
                 splash._replaceText($("#splashInfoPrompt"), text, thenDo, thenDoArg);
             },
 
-            showLoginError: function (text, thenDo, thenDoArg) {
-                splash._replaceText($("#loginErrorLog"), text, thenDo, thenDoArg);
+            showError: function (text, thenDo, thenDoArg) {
+                splash._replaceText($("#ErrorLog"), text, thenDo, thenDoArg);
             },
 
-            showLoginSuccess: function (text, thenDo, thenDoArg) {
-                splash._replaceText($("#loginSuccessLog"), text, thenDo, thenDoArg);
+            showSuccess: function (text, thenDo, thenDoArg) {
+                splash._replaceText($("#SuccessLog"), text, thenDo, thenDoArg);
+            },
+
+
+            clearMessages: function () {
+                $("#SuccessLog").empty();
+                $("#ErrorLog").empty();
             },
 
             showActions: function () {
@@ -109,8 +116,8 @@ define(["lib/i18n.min!nls/resources.js", "app/diag"],
             },
 
             clearLoginForm: function () {
-                $("#loginSuccessLog").empty();
-                $("#loginErrorLog").empty();
+                $("#SuccessLog").empty();
+                $("#ErrorLog").empty();
                 $("#splashInfoActions").empty();
             },
 
