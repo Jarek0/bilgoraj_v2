@@ -132,9 +132,6 @@ define(["lib/i18n.min!nls/resources.js"],
                             controller._config.featureSvcParams.fields,
                             controller._config.appParams.surveyNotificationPolicy, i18n.tooltips.importantQuestion
                         );
-                        $.subscribe('showRegisterPanel', function(){
-                            controller._loadCSS('css/register.css');
-                            register_controller.init('splashInfoPanel');});
                         // Prepare and start the scene controller
                         controller._loadCSS("//js.arcgis.com/4.1/esri/css/main.css");
                         controller._loadCSS("//js.arcgis.com/4.1/dijit/themes/claro/claro.css");

@@ -26,6 +26,7 @@ define(["lib/i18n.min!nls/resources.js",
         notificationSignIn: 0,
         notificationSignOut: 1,
         notificationAvatarUpdate: 2,
+        notificationRegister: 3,
 
         //------------------------------------------------------------------------------------------------------------//
 
@@ -99,7 +100,7 @@ define(["lib/i18n.min!nls/resources.js",
 
                 $("#returnButton").on("click", function(){
                     splash.clearLoginForm();
-                    history.pushState({}, null, tokenUtil.removeURLParameter(window.location.href,'resetToken'));
+                    window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'resetToken'));
                     handleUserSignin.createGisExpertLoginForm();
                 });
 
@@ -108,6 +109,12 @@ define(["lib/i18n.min!nls/resources.js",
                 });
 
                 return;
+            }
+
+            if(URLparams.registersuccess!==undefined && URLparams.registersuccess==="true"){
+                window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'registerSuccess'));
+                console.log("debug");
+                splash.showSuccess("Rejestracja powiodła się. Przejdź do skrzynki mailowej w celu weryfikacji")
             }
 
             if (handleUserSignin.availabilities.guest) {
@@ -145,8 +152,13 @@ define(["lib/i18n.min!nls/resources.js",
                     "<span style='display: block;'>Rejestracja</span></div>"
                 ).appendTo(actionButtonContainer);
                 $("#gisExpertRegister").on("click", function() {
-                    register_controller.emit();
+                    handleUserSignin.statusCallback(handleUserSignin.notificationRegister);
                 });
+            }
+
+            if(URLparams.registerSuccess!==undefined && URLparams.registerSuccess===true){
+                splash.clearMessages();
+                splash.showSuccess("Rejestracja powiodła się. Przejdź do skrzynki mailowej w celu weryfikacji.")
             }
         },
 
@@ -198,6 +210,17 @@ define(["lib/i18n.min!nls/resources.js",
             });
         },
 
+        showResendPanel: function(username) {
+            var resendMessage = $("<p id='#resendMailMessage'>Twoje konto jest niezweryfikowane. " +
+                "Przejdź na skrzynkę mailową w celu weryfikacji</p>");
+
+            $("<a id='resendMail' style='cursor:pointer'> Wyślij ponownie</a>").appendTo(resendMessage);
+            resendMessage.appendTo('#ErrorLog');
+            $("#resendMail").on('click', function() {
+                handleUserSignin.resend(username);
+            });
+        },
+
         /**
          * Returns the signed-in state.
          * @return {boolean} Logged in or not
@@ -243,7 +266,8 @@ define(["lib/i18n.min!nls/resources.js",
             var email = $("#email").val();
             var password = $("#password").val();
             if(email==='' || password===''){
-                splash.showLoginError("Pola nie mogą być puste");
+                splash.clearMessages();
+                splash.showError("Pola nie mogą być puste");
             }
             else
                 $.ajax({
@@ -270,8 +294,11 @@ define(["lib/i18n.min!nls/resources.js",
                         handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
                     }),
                     error: (function (xhr, ajaxOptions, thrownError) {
-                        console.log(xhr);
-                        splash.showLoginError(JSON.parse(xhr.responseText).message);
+                        splash.clearMessages();
+                        if (xhr.responseJSON.message === 'UNCONFIRMED')
+                            handleUserSignin.showResendPanel(email);
+                        else
+                            splash.showError(xhr.responseJSON.message);
                     })
                 })
         },
@@ -279,7 +306,8 @@ define(["lib/i18n.min!nls/resources.js",
         resetPassword: function () {
             var email = $("#email").val();
             if(email===''){
-                splash.showLoginError("Pole nie może być puste");
+                splash.clearMessages();
+                splash.showError("Pole nie może być puste");
             }
             else
                 $.ajax({
@@ -291,10 +319,12 @@ define(["lib/i18n.min!nls/resources.js",
                         username: email
                     }),
                     success: (function (data) {
-                        splash.showLoginSuccess(data.message);
+                        splash.clearMessages();
+                        splash.showSuccess(data.message);
                     }),
                     error: (function (xhr, ajaxOptions, thrownError) {
-                        splash.showLoginError(JSON.parse(xhr.responseText).message);
+                        splash.clearMessages();
+                        splash.showError(JSON.parse(xhr.responseText).message);
                     })
                 })
         },
@@ -303,10 +333,12 @@ define(["lib/i18n.min!nls/resources.js",
             var passwordConfirm = $("#passwordConfirm").val();
             var password = $("#password").val();
             if(passwordConfirm==='' || confirm===''){
-                splash.showLoginError("Pola nie mogą być puste");
+                splash.clearMessages();
+                splash.showError("Pola nie mogą być puste");
             }
             else if(passwordConfirm!==password){
-                splash.showLoginError("Podane hasła nie są zgodne");
+                splash.clearMessages();
+                splash.showError("Podane hasła nie są zgodne");
             }
             else
                 $.ajax({
@@ -320,11 +352,13 @@ define(["lib/i18n.min!nls/resources.js",
                         resetPasswordToken: token
                     }),
                     success: (function (data) {
-                        splash.showLoginSuccess(data.message);
+                        splash.clearMessages();
+                        splash.showSuccess(data.message);
                     }),
                     error: (function (xhr, ajaxOptions, thrownError) {
                         console.log(xhr);
-                        splash.showLoginError(JSON.parse(xhr.responseText).message);
+                        splash.clearMessages();
+                        splash.showError(JSON.parse(xhr.responseText).message);
                     })
                 })
         },
@@ -340,6 +374,23 @@ define(["lib/i18n.min!nls/resources.js",
                     console.log(xhr);
                 })
             })
+        },
+
+        resend: function(data) {
+            $.ajax({
+                url: 'http://localhost:8080/geoanalityka-web/rest/auth/resendMail',
+                type: 'POST',
+                contentType: "application/json",
+                dataType: 'json',
+                success: (function(data) {
+                    splash.clearMessages();
+                }),
+                error: (function(xhr, ajaxOptions, thrownError) {
+                    splash.clearMessages();
+                    splash.showError(JSON.parse(xhr.responseText).message);
+                }),
+                data: data
+            });
         }
     };
     return handleUserSignin;
