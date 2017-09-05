@@ -303,24 +303,32 @@ define(["lib/i18n.min!nls/resources.js"],
             },
 
             _postSurvey: function (surveyPoint) {
-                var url, update;
 
-                // Post the packet
-                console.log("controller._config.featureSvcParams.url");
-                console.log(controller._config.featureSvcParams.url);
-                url = controller._config.featureSvcParams.url + "/applyEdits";
-                update = "f=json&id=" + controller._config.featureSvcParams.id +
-                    "&adds=%5B" + controller._stringifyForApplyEdits(surveyPoint) + "%5D";
+                var url = controller._config.appParams.submitURL;
 
-                console.log("*** Submit " + JSON.stringify(surveyPoint) + " ***");
-                console.log("url i update");
-                console.log(url);
-                console.log(update);
-                $.post(url, update, function (results, status) {
-                    console.log("*** POST status: " + status + "; " + JSON.stringify(results) + " ***");
+                var data = {
+                    update: "f=json&id=" + controller._config.featureSvcParams.id +
+                    "&adds=%5B" + controller._stringifyForApplyEdits(surveyPoint) + "%5D",
+                    token: this.getCookie('token')
+                };
 
-                    // Update the response clusters
-                    controller._clustererView.refresh();
+                this.eraseCookie('token');
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: (function (data) {
+                        console.log("ok");
+                        controller._clustererView.refresh();
+                        window.location.replace('?surveySubmitSuccess=true');
+                    }),
+                    error: (function (xhr, ajaxOptions, thrownError) {
+                        console.log("error");
+                        controller._clustererView.refresh();
+                        window.location.replace('?surveySubmitSuccess=false');
+                    })
                 });
             },
 
@@ -350,6 +358,31 @@ define(["lib/i18n.min!nls/resources.js"],
                     result += value;
                 }
                 return result;
+            },
+
+            getCookie : function(cname) {
+                var name = cname + '=';
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1);
+                    if (c.indexOf(name) !== -1) return decodeURIComponent(c.substring(
+                        name.length, c.length));
+                }
+                return '';
+            },
+
+            eraseCookie :function(name){
+                this.setCookie(name,"",-1);
+            },
+
+            setCookie : function(name, content, exhours) {
+                exhours = exhours || 3;
+                var d = new Date();
+                d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
+                var expires = 'expires=' + d.toUTCString();
+                document.cookie = name + '=' + encodeURIComponent(content) + '; ' + expires +
+                    "; path=/";
             },
 
             _clusterViewBuilder: function (view) {

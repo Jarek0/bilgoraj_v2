@@ -114,10 +114,20 @@ define(["lib/i18n.min!nls/resources.js",
                 return;
             }
 
-            if(URLparams.registersuccess!==undefined && URLparams.registersuccess==="true"){
+            if(URLparams.registersuccess!==undefined && JSON.parse(URLparams.registersuccess)==="true"){
                 window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'registerSuccess'));
-                console.log("debug");
                 splash.showSuccess("Rejestracja powiodła się. Przejdź do skrzynki mailowej w celu weryfikacji")
+            }
+
+            if(URLparams.surveysubmitsuccess!==undefined){
+                if(JSON.parse(URLparams.surveysubmitsuccess)===true){
+                    window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
+                    splash.showSuccess("Ankieta zostala poprawnie wysłana")
+                }
+                else{
+                    window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
+                    splash.showError("W czasie wysyłania ankiety nastąpił błąd. Spróbuj zalogować się ponownie lub skontaktuj się z administratorem.")
+                }
             }
 
             if (handleUserSignin.availabilities.guest) {
