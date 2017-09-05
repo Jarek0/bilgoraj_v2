@@ -90,6 +90,8 @@ define(["lib/i18n.min!nls/resources.js",
             var URLparams = tokenUtil.getAllUrlParams(window.location.href);
 
             if(URLparams.resettoken!==undefined){
+                splash.replacePrompt("Zmień hasło");
+
                 $("<p><input id='password' type='password' name='password' placeholder='Password'></p>"+
                     "<p><input id='passwordConfirm' type='password' name='passwordConfirm' placeholder='confirm password'></p>"+
                     "<p><button id='returnButton' type='button' class='btn btn-primary'>"+
@@ -103,6 +105,7 @@ define(["lib/i18n.min!nls/resources.js",
                     window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'resetToken'));
                     handleUserSignin.createGisExpertLoginForm();
                 });
+
 
                 $("#changePasswordButton").on("click", function(){
                     handleUserSignin.changePassword(URLparams.resettoken);
@@ -332,9 +335,13 @@ define(["lib/i18n.min!nls/resources.js",
         changePassword: function (token) {
             var passwordConfirm = $("#passwordConfirm").val();
             var password = $("#password").val();
-            if(passwordConfirm==='' || confirm===''){
+            if(passwordConfirm===undefined || confirm===undefined || passwordConfirm==='' || confirm===''){
                 splash.clearMessages();
                 splash.showError("Pola nie mogą być puste");
+            }
+            if((password.length) < 6){
+                splash.clearMessages();
+                splash.showError("Hasło powinno zawierać co najmniej 6 znaków");
             }
             else if(passwordConfirm!==password){
                 splash.clearMessages();
