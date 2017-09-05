@@ -324,7 +324,6 @@ define([
                             survey_controller._showCurrentResponse();
                         }
                     });
-
                     // Activate the action-bar buttons
                     function buttonPublish(evt) {
                         var btn = evt.currentTarget;

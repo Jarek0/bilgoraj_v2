@@ -96,6 +96,8 @@ define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag",
                                         user.signout();
                                         if (isFinished) {
                                             splash.replacePrompt(config.appParams.finishText);
+                                            document.cookie= 'token'+'=;Path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                                            location.reload();
                                         }
                                     });
 

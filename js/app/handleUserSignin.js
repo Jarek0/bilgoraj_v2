@@ -164,8 +164,20 @@ define(["lib/i18n.min!nls/resources.js",
                 splash.showSuccess("Rejestracja powiodła się. Przejdź do skrzynki mailowej w celu weryfikacji.")
             }
         },
-
+        readCookie:function(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
         createGisExpertLoginForm: function(){
+            if(document.cookie.indexOf('token')>=0){
+                handleUserSignin.sendToken(handleUserSignin.readCookie('token'));
+            }
             var actionButtonContainer= splash.getActionsContainer();
             splash.clearLoginForm();
 
@@ -190,7 +202,29 @@ define(["lib/i18n.min!nls/resources.js",
                 handleUserSignin.createForgotPasswordForm();
             });
         },
+        sendToken: function (value) {
+            $.ajax({
+                url: 'http://localhost:8080/geoanalityka-web/rest/auth/checkToken',
+                type: 'POST',
+                contentType: "application/json",
+                dataType: 'json',
+                success: (function(data) {
 
+                }),
+                error: (function(xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                    if(xhr.statusText.toLocaleLowerCase()==='bad request')
+                        register_controller.showValidationErrors(JSON.parse(JSON.parse(xhr.responseText).message));
+                    else{
+                        if(xhr.responseText===undefined)
+                            register_controller.showServerError("Błąd połączenia z serwerem");
+                        else
+                            register_controller.showServerError(JSON.parse(xhr.responseText).message);
+                    }
+                }),
+                value: JSON.stringify(value)
+            });
+        }
         createForgotPasswordForm: function (){
             var actionButtonContainer= splash.getActionsContainer();
             splash.replacePrompt("Resetowanie hasła");
@@ -263,6 +297,7 @@ define(["lib/i18n.min!nls/resources.js",
                 }
             }
             handleUserSignin.currentProvider = "none";
+
         },
 
         loginFormSubmit: function () {

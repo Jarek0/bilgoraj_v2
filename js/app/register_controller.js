@@ -10,6 +10,7 @@ define(['app/splash'],
                     complete: function () {
                         $("#registerPage").fadeIn();
                         $('#registerButton').on('click', function() {
+                            register_controller.clearErrorsFields();
                             register_controller.register();
                         });
                         $('#comeBackButton').on('click',function(){
@@ -39,10 +40,11 @@ define(['app/splash'],
                     register_controller.showValidationErrors(errors)
                 } else {
                     register_controller.sendRequest(data);
-                    register_controller.clearErrorsFields();
+                    grecaptcha.reset();
                 }},
 
             clearErrorsFields: function(){
+                document.getElementById('passwordError').innerHTML="";
                 document.getElementById('serverError').innerHTML="";
                 document.getElementById('firstnameError').innerHTML="";
                 document.getElementById('lastnameError').innerHTML="";
@@ -53,8 +55,9 @@ define(['app/splash'],
                 document.getElementById('zipCodeError').innerHTML="";
                 document.getElementById('streetError').innerHTML="";
                 document.getElementById('cityError').innerHTML="";
+                document.getElementById('phoneError').innerHTML="";
                 document.getElementById('captchaError').innerHTML="";
-                grecaptcha.reset();
+
             },
 
             collectData: function() {
