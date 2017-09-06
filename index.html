@@ -1,8 +1,9 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <!--
+
+<head>
+  <meta charset="utf-8">
+  <!--
      | Copyright 2015 Esri
      |
      | Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,39 +18,58 @@
      | See the License for the specific language governing permissions and
      | limitations under the License.
     -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
-    <link href="js/lib/bootstrap.min.css" rel="stylesheet">
-    <link href="css/styles.css" rel="stylesheet">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript" src='https://www.google.com/recaptcha/api.js'></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="js/lib/bootstrap.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src='https://www.google.com/recaptcha/api.js'></script>
   <!-- reCAPTCHA with Auto language -->
 </head>
-<body>
-    <!-- Load libs and launch app -->
-    <script src="js/lib/libs.js"></script>
-    <script>
-    // Main module is in js/app directory, and it refers to third-party libraries in the js/lib directory
-    var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/"));
-    var config = {
-        paths: {
-            app: package_path + "/js/app",
-            lib: package_path + "/js/lib"
-        },
-		locale: "pl"
-    };
 
-    // Have to handle a locale parameter before require is loaded
-    if (location.search.match(/locale=([\w\-]+)/)) {
-        config.locale = RegExp.$1.toLowerCase();
-    }
+<body onload="checkAdblock()">
+  <!-- Load libs and launch app -->
+  <script src="js/lib/libs.js"></script>
+  <script>
+  // Main module is in js/app directory, and it refers to third-party libraries in the js/lib directory
+  function checkAdblock() {
 
-    requirejs.config(config);
+    window.setTimeout(function() {
+      var adBlockEnabled = false;
+      var testAd = document.createElement('div');
+      testAd.innerHTML = '&nbsp;';
+      testAd.className = 'adsbox';
+      document.body.appendChild(testAd);
+      if (testAd.offsetHeight === 0) {
+        adBlockEnabled = true;
+      }
+      if (adBlockEnabled) {
+        location.reload();
+        alert("Wyłącz AdBlocka");
+      }
+    }, 100);
+  }
+  var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/"));
+  var config = {
+    paths: {
+      app: package_path + "/js/app",
+      lib: package_path + "/js/lib"
+    },
+    locale: "pl"
+  };
 
-    // Load the main app module to start the app
-    require(["app/main"]);
-    </script>
+  // Have to handle a locale parameter before require is loaded
+  if (location.search.match(/locale=([\w\-]+)/)) {
+    config.locale = RegExp.$1.toLowerCase();
+  }
+
+  requirejs.config(config);
+
+  // Load the main app module to start the app
+  require(["app/main"]);
+
+  </script>
 </body>
+
 </html>
