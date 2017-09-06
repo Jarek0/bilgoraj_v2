@@ -90,8 +90,8 @@ define(["lib/i18n.min!nls/resources.js", "app/handleUserSignin", "app/diag", 'ap
                 });
             },
 
-            signout: function () {
-                handleUserSignin.signOut();
+            signout: function (token) {
+                handleUserSignin.signOut(token);
             }
 
             //----- Procedures meant for internal module use only ----------------------------------------------------//

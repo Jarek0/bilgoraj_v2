@@ -26,11 +26,13 @@
 define([
     "lib/i18n.min!nls/resources.js",
     "app/survey",
-    "app/diag"
+    "app/diag",
+    "app/tokenUtil"
 ], function (
     i18n,
     survey,
-    diag
+    diag,
+    tokenUtil
 ) {
     "use strict";
     var survey_controller = {
@@ -408,8 +410,14 @@ define([
                 id: "",
                 canSubmit: false
             });
+
+            var token = tokenUtil.getCookie('token');
+
+            tokenUtil.eraseCookie('token');
+
+            $.publish("request-signOut", isFinished ,token);
+
             survey.clearForm();
-            $.publish("request-signOut", isFinished);
         },
 
         _updateUser: function (loginInfo) {
