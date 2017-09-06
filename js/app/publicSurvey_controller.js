@@ -124,8 +124,8 @@ define(["lib/i18n.min!nls/resources.js"],
 
 
 
-        require(["app/survey", "app/survey_controller", "app/scene_controller", "app/message", "app/register_controller"],
-          function(survey, survey_controller, scene_controller, message, register_controller) {
+        require(["app/survey", "app/survey_controller", "app/scene_controller", "app/message","app/tokenUtil", "app/register_controller"],
+          function(survey, survey_controller, scene_controller, message, tokenUtil, register_controller) {
             // Prepare the survey
             controller._config.appParams._surveyDefinition = survey.createSurveyDefinition(
               controller._config.featureSvcParams.popupDescription,
@@ -308,10 +308,10 @@ define(["lib/i18n.min!nls/resources.js"],
         var data = {
           update: "f=json&id=" + controller._config.featureSvcParams.id +
             "&adds=%5B" + controller._stringifyForApplyEdits(surveyPoint) + "%5D",
-          token: this.getCookie('token')
+          //token: this.getCookie('token')
         };
 
-        this.eraseCookie('token');
+        //this.eraseCookie('token');
 
         $.ajax({
           url: url,
@@ -321,12 +321,14 @@ define(["lib/i18n.min!nls/resources.js"],
           success: (function(data) {
             console.log("ok");
             controller._clustererView.refresh();
-            window.location.replace('?surveySubmitSuccess=true');
+            tokenUtil.setCookie("submit","true",(1.0/36.0));
+            window.location.reload();
           }),
           error: (function(xhr, ajaxOptions, thrownError) {
             console.log("error");
             controller._clustererView.refresh();
-            window.location.replace('?surveySubmitSuccess=false');
+            tokenUtil.setCookie("submit","false",(1.0/36.0));
+            window.location.reload();
           })
         });
       },

@@ -117,18 +117,17 @@ define(["lib/i18n.min!nls/resources.js",
 
                 return;
             }
-
-            if(URLparams.registersuccess!==undefined && JSON.parse(URLparams.registersuccess)==="true"){
+            if(document.cookie.indexOf('register') >= 0){
                 window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'registerSuccess'));
                 splash.showSuccess("Rejestracja powiodła się. Przejdź do skrzynki mailowej w celu weryfikacji")
             }
 
             if(URLparams.surveysubmitsuccess!==undefined){
-                if(JSON.parse(URLparams.surveysubmitsuccess)===true){
+                if(tokenUtil.getCookie(submit)){
                     window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
                     splash.showSuccess("Dziękujemy za udział w ankiecie")
                 }
-                else{
+                else if(!tokenUtil.getCookie(submit)){
                     window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
                     splash.showError("W czasie wysyłania ankiety nastąpił błąd. Spróbuj zalogować się ponownie lub skontaktuj się z administratorem.")
                 }
@@ -140,6 +139,7 @@ define(["lib/i18n.min!nls/resources.js",
                     i18n.labels.guestName + "</div>"
                 ).appendTo(actionButtonContainer);
                 $("#guestSignin").on("click", function () {
+                    $("#sidebarContent").css("background-color","white");
                     handleUserSignin.loggedIn = true;
                     handleUserSignin.currentProvider = "guest";
 
