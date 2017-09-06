@@ -15,15 +15,15 @@
  | limitations under the License.
  */
 //====================================================================================================================//
-define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag", "app/register_controller"],
-    function (i18n, config, splash, diag, register_contoller) {
+define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash","app/handleUserSignin", "app/diag","app/tokenUtil", "app/register_controller"],
+    function (i18n, config, splash,handleUserSignin, diag,tokenUtil, register_contoller) {
         "use strict";
         var main = {
             //--------------------------------------------------------------------------------------------------------//
 
             init: function () {
                 // Config tells us app specifics in addition to app's parameters
-
+                    
                 config.init().then(
                     function () {
                         document.title = config.appParams.titleText;
@@ -96,7 +96,7 @@ define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag",
                                         user.signout();
                                         if (isFinished) {
                                             splash.replacePrompt(config.appParams.finishText);
-                                            document.cookie= 'token'+'=;Path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                                            tokenUtil.eraseCookie('token');
                                             location.reload();
                                         }
                                     });
