@@ -28,28 +28,11 @@
   <!-- reCAPTCHA with Auto language -->
 </head>
 
-<body onload="checkAdblock()">
+<body>
   <!-- Load libs and launch app -->
   <script src="js/lib/libs.js"></script>
   <script>
   // Main module is in js/app directory, and it refers to third-party libraries in the js/lib directory
-  function checkAdblock() {
-
-    window.setTimeout(function() {
-      var adBlockEnabled = false;
-      var testAd = document.createElement('div');
-      testAd.innerHTML = '&nbsp;';
-      testAd.className = 'adsbox';
-      document.body.appendChild(testAd);
-      if (testAd.offsetHeight === 0) {
-        adBlockEnabled = true;
-      }
-      if (adBlockEnabled) {
-        location.reload();
-        alert("Wyłącz AdBlocka");
-      }
-    }, 100);
-  }
   var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/"));
   var config = {
     paths: {

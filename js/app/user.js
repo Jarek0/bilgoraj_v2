@@ -21,8 +21,8 @@
  * @namespace user
  * @version 0.1
  */
-define(["lib/i18n.min!nls/resources.js", "app/handleUserSignin", "app/diag", 'app/register_controller'],
-    function (i18n, handleUserSignin, diag, register_controller) {
+define(["lib/i18n.min!nls/resources.js", "app/handleUserSignin"],
+    function (i18n, handleUserSignin) {
         "use strict";
         var user = {
             //----- Events -------------------------------------------------------------------------------------------//
@@ -69,9 +69,6 @@ define(["lib/i18n.min!nls/resources.js", "app/handleUserSignin", "app/diag", 'ap
                             break;
                         case handleUserSignin.notificationSignOut:
                             $.publish("signedOut-user");
-                            break;
-                        case handleUserSignin.notificationAvatarUpdate:
-                            $.publish("avatar-update", handleUserSignin.getUser().avatar);
                             break;
                         case handleUserSignin.notificationRegister:
                             $.publish("start-register");

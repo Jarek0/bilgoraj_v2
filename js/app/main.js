@@ -15,8 +15,8 @@
  | limitations under the License.
  */
 //====================================================================================================================//
-define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag", "app/register_controller"],
-    function (i18n, config, splash, diag, register_contoller) {
+define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag", "app/register_controller", "app/adBlockTester"],
+    function (i18n, config, splash, diag, register_contoller, adBlockTester) {
         "use strict";
         var main = {
             //--------------------------------------------------------------------------------------------------------//
@@ -63,6 +63,14 @@ define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag",
 
                             appReady = appController.init(config, body);
 
+                            if(adBlockTester.testAdBlock())
+                            {
+                                splash.replacePrompt("Wykryto ad blocka");
+                                appReady=false;
+                                signinReady=false;
+                                splash.showError("Prosimy o wyłączenie adblocka i ponowne wejście na stronę");
+                            }
+
                             // Wire up coordination between splash/signin and rest of app
                             $.subscribe("signedIn-user", function (ignore, loginInfo) {
                                 diag.appendWithLF("signed in user: " + JSON.stringify(loginInfo)); //???
@@ -92,10 +100,10 @@ define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag",
                             // Run app components
                             $.when(signinReady, appReady).then(
                                 function (user) {
-                                    $.subscribe("request-signOut", function (ignore, isFinished, token) {
+                                    $.subscribe("request-signOut", function (isFinished, token) {
                                         user.signout(token);
-                                        if (isFinished) {
-                                            splash.replacePrompt(config.appParams.finishText);
+                                        if (token!==undefined) {
+                                            splash.showSuccess("Dziękujemy za udział w ankiecie");
                                         }
                                     });
 

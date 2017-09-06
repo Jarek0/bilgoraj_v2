@@ -236,7 +236,7 @@ define([
 
                     survey_controller._finishBtn = activateButton("_finish_survey_form", i18n.prompts.finishBtn);
                     $.subscribe("_finish_survey_form", function () {
-                        survey_controller._requestSignout(true);
+                        survey_controller._requestSignout();
                     });
 
                     survey_controller._seeResponsesBtn = activateButton("_see_current_responses",
@@ -404,7 +404,7 @@ define([
             survey_controller._showPageOne();
         },
 
-        _requestSignout: function (isFinished) {
+        _requestSignout: function () {
             survey_controller._updateUser({
                 name: "",
                 id: "",
@@ -415,9 +415,9 @@ define([
 
             tokenUtil.eraseCookie('token');
 
-            $.publish("request-signOut", isFinished ,token);
-
             survey.clearForm();
+
+            $.publish("request-signOut",token);
         },
 
         _updateUser: function (loginInfo) {

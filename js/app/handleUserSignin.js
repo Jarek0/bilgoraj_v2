@@ -84,6 +84,10 @@ define(["lib/i18n.min!nls/resources.js",
         initUI: function () {
             var actionButtonContainer= splash.getActionsContainer();
 
+            if (document.cookie.indexOf('token') >= 0) {
+                handleUserSignin.sendTokenToAutologin(tokenUtil.getCookie('token'));
+            }
+
             // Switch to the sign-in prompt
             splash.replacePrompt(i18n.prompts.signIn, splash.showActions);
 
@@ -122,7 +126,7 @@ define(["lib/i18n.min!nls/resources.js",
             if(URLparams.surveysubmitsuccess!==undefined){
                 if(JSON.parse(URLparams.surveysubmitsuccess)===true){
                     window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
-                    splash.showSuccess(config.appParams.finishText)
+                    splash.showSuccess("Dziękujemy za udział w ankiecie")
                 }
                 else{
                     window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
@@ -138,6 +142,8 @@ define(["lib/i18n.min!nls/resources.js",
                 $("#guestSignin").on("click", function () {
                     handleUserSignin.loggedIn = true;
                     handleUserSignin.currentProvider = "guest";
+
+                    tokenUtil.eraseCookie('token');
 
                     handleUserSignin.user = {
                         name: i18n.labels.guestName,
@@ -175,38 +181,7 @@ define(["lib/i18n.min!nls/resources.js",
             }
         },
 
-        sendTokenToAutologin: function(value) {
-            $.ajax({
-                url: 'http://localhost:8080/geoanalityka-web/rest/auth/checkToken',
-                type: 'GET',
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("token", value);
-                },
-
-                success: (function(data) {
-                    handleUserSignin.loggedIn = true;
-                    handleUserSignin.currentProvider = "gisExpert";
-                    handleUserSignin.user = {
-                        name: data.firstname + " " + data.lastname,
-                        id: data.token,
-                        org: "gisExpert",
-                        canSubmit: true
-                    };
-
-                    // Update the calling app
-                    tokenUtil.setCookie("token", data.token, 4);
-                    handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
-                }),
-                error: (function(xhr, ajaxOptions, thrownError) {
-                    console.log(xhr);
-                })
-            });
-        },
-
         createGisExpertLoginForm: function(){
-            if (document.cookie.indexOf('token') >= 0) {
-                handleUserSignin.sendTokenToAutologin(tokenUtil.getCookie('token'));
-            }
             var actionButtonContainer= splash.getActionsContainer();
             splash.clearLoginForm();
 
@@ -312,6 +287,7 @@ define(["lib/i18n.min!nls/resources.js",
                 splash.clearMessages();
                 splash.showError("Pola nie mogą być puste");
             }
+
             else
                 $.ajax({
                     url: "http://localhost:8080/geoanalityka-web/rest/auth/getToken",
@@ -411,10 +387,10 @@ define(["lib/i18n.min!nls/resources.js",
         },
 
         gisExpertSignOut: function(token){
-            console.log(token);
             $.ajax({
-                url: "http://localhost:8080/geoanalityka-web/rest/auth/logout",
+                url: "http://localhost:8080/geoanalityka-web/rest/auth/signOut",
                 type: "GET",
+                contentType: 'application/json',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("token", token);
                 },
@@ -429,6 +405,34 @@ define(["lib/i18n.min!nls/resources.js",
                 })
             });
 
+        },
+
+        sendTokenToAutologin: function(value) {
+            $.ajax({
+                url: 'http://localhost:8080/geoanalityka-web/rest/auth/checkToken',
+                type: 'GET',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("token", value);
+                },
+
+                success: (function(data) {
+                    handleUserSignin.loggedIn = true;
+                    handleUserSignin.currentProvider = "gisExpert";
+                    handleUserSignin.user = {
+                        name: data.firstname + " " + data.lastname,
+                        id: data.token,
+                        org: "gisExpert",
+                        canSubmit: true
+                    };
+
+                    // Update the calling app
+                    tokenUtil.setCookie("token", data.token, 4);
+                    handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
+                }),
+                error: (function(xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                })
+            });
         },
 
         resend: function(data) {
