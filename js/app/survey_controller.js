@@ -26,11 +26,13 @@
 define([
     "lib/i18n.min!nls/resources.js",
     "app/survey",
-    "app/diag"
+    "app/diag",
+    "app/tokenUtil"
 ], function (
     i18n,
     survey,
-    diag
+    diag,
+    tokenUtil
 ) {
     "use strict";
     var survey_controller = {
@@ -234,7 +236,7 @@ define([
 
                     survey_controller._finishBtn = activateButton("_finish_survey_form", i18n.prompts.finishBtn);
                     $.subscribe("_finish_survey_form", function () {
-                        survey_controller._requestSignout(true);
+                        survey_controller._requestSignout();
                     });
 
                     survey_controller._seeResponsesBtn = activateButton("_see_current_responses",
@@ -402,14 +404,20 @@ define([
             survey_controller._showPageOne();
         },
 
-        _requestSignout: function (isFinished) {
+        _requestSignout: function () {
             survey_controller._updateUser({
                 name: "",
                 id: "",
                 canSubmit: false
             });
+
+            var token = tokenUtil.getCookie('token');
+
+            tokenUtil.eraseCookie('token');
+
             survey.clearForm();
-            $.publish("request-signOut", isFinished);
+
+            $.publish("request-signOut",token);
         },
 
         _updateUser: function (loginInfo) {
