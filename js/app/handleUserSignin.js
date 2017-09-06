@@ -126,6 +126,7 @@ define(["lib/i18n.min!nls/resources.js",
           i18n.labels.guestName + "</div>"
         ).appendTo(actionButtonContainer);
         $("#guestSignin").on("click", function() {
+          $("#sidebarContent").css("background-color","white");
           handleUserSignin.loggedIn = true;
           handleUserSignin.currentProvider = "guest";
 
@@ -202,6 +203,7 @@ define(["lib/i18n.min!nls/resources.js",
         },
 
         success: (function(data) {
+          $("#sidebarContent").css("background-color","white");
           handleUserSignin.loggedIn = true;
           handleUserSignin.currentProvider = "gisExpert";
           handleUserSignin.user = {
@@ -289,7 +291,9 @@ define(["lib/i18n.min!nls/resources.js",
             // Log the user out of the app
             handleUserSignin.gisExpertSignOut(true);
             break;
-     },
+        }
+      }
+    },
     loginFormSubmit: function() {
       var email = $("#email").val();
       var password = $("#password").val();
@@ -307,6 +311,7 @@ define(["lib/i18n.min!nls/resources.js",
             password: password
           }),
           success: (function(data) {
+            $("#sidebarContent").css("background-color","white");
             handleUserSignin.loggedIn = true;
             handleUserSignin.currentProvider = "gisExpert";
             handleUserSignin.user = {

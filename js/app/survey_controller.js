@@ -161,6 +161,7 @@ define([
                     }
 
                     //----- Action buttons ---------------------------------------------------------------------------//
+                    
                     survey_controller._submitBtn = activateButton("_submit_survey_form", i18n.prompts.submitBtn);
                     $.subscribe("_submit_survey_form", function () {
                         var submission = {};
