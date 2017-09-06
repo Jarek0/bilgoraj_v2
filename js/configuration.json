@@ -2,6 +2,7 @@
     "webscene": "c4267f5c66e748c6b6f245ca81976819",
     "portalurl": "https://www.arcgis.com",
 	"survey": "Bilgoraj_ankieta",
+    "submitURL": "http://localhost:8080/geoanalityka-web/rest/auth/submitSurvey",
 
     "titleText": "Model 3D - Biłgoraj",
     "splashText": "Ankieta jest skierowana do mieszkaców miasta Biłgoraj i dotyczy obszaru rewitalizacji",

@@ -1,13 +1,18 @@
 define([],
     function () {
         var tokenUtil;
-        tokenUtil={setCookie : function(name, content, exhours) {
+        tokenUtil={
+            setCookie : function(name, content, exhours) {
             exhours = exhours || 3;
             var d = new Date();
             d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
             var expires = 'expires=' + d.toUTCString();
             document.cookie = name + '=' + encodeURIComponent(content) + '; ' + expires +
                 "; path=/";
+        },
+
+            eraseCookie :function(name){
+                this.setCookie(name,"",-1);
         },
 
             getCookie : function(cname) {

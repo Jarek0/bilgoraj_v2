@@ -200,6 +200,7 @@ define(["lib/i18n.min!nls/resources.js",
         beforeSend: function(xhr) {
           xhr.setRequestHeader("token", value);
         },
+
         success: (function(data) {
           handleUserSignin.loggedIn = true;
           handleUserSignin.currentProvider = "gisExpert";
@@ -288,6 +289,142 @@ define(["lib/i18n.min!nls/resources.js",
             // Log the user out of the app
             handleUserSignin.gisExpertSignOut(true);
             break;
+=======
+        googleAuth: null,
+
+        //------------------------------------------------------------------------------------------------------------//
+
+        /**
+         * Initializes the module by initializing each of the supported and selected social medium providers.
+         * @param {object} appParams Application parameters to control and facilitate social-media setup; module uses
+         * the facebookAppId, googleplusClientId, showFacebook, showGooglePlus, showTwitter,
+         * twitterCallbackUrl, twitterSigninUrl, and twitterUserUrl properties
+         * @param {function} statusCallback Function to call with social-media status events; function receives one
+         * of the constants notificationSignIn, notificationSignOut, notificationAvatarUpdate (above)
+         */
+        init: function (appParams, statusCallback) {
+            var deferred, facebookDeferred, googlePlusDeferred, twitterDeferred;
+
+            deferred = $.Deferred();
+            handleUserSignin.statusCallback = statusCallback;
+            handleUserSignin.appParams = appParams;
+
+            //........................................................................................................//
+
+            // Do we offer guest access?
+            handleUserSignin.availabilities.guest = appParams.showGuest;
+
+            handleUserSignin.availabilities.gisExpertLogin = appParams.gisExpertLogin;
+            handleUserSignin.availabilities.gisExpertRegister = appParams.gisExpertRegister;
+
+            // Test if we have any initialized providers
+            $.when(facebookDeferred, googlePlusDeferred, twitterDeferred)
+                .done(function (facebookAvail, googlePlusAvail, twitterAvail) {
+                    if (handleUserSignin.availabilities.guest || facebookAvail || googlePlusAvail || twitterAvail) {
+                        deferred.resolve();
+                    }
+                    else {
+                        deferred.reject();
+                    }
+                });
+
+            return deferred;
+        },
+
+        initUI: function () {
+            var actionButtonContainer= splash.getActionsContainer();
+
+            // Switch to the sign-in prompt
+            splash.replacePrompt(i18n.prompts.signIn, splash.showActions);
+
+            var URLparams = tokenUtil.getAllUrlParams(window.location.href);
+
+            if(URLparams.resettoken!==undefined){
+                splash.replacePrompt("Zmień hasło");
+
+                $("<p><input id='password' type='password' name='password' placeholder='Password'></p>"+
+                    "<p><input id='passwordConfirm' type='password' name='passwordConfirm' placeholder='confirm password'></p>"+
+                    "<p><button id='returnButton' type='button' class='btn btn-primary'>"+
+                    "Powrót</button>" +
+                    "<button id='changePasswordButton' class='btn btn-primary'>Zmień hasło</button>"+
+                    "</p>"
+                ).appendTo(actionButtonContainer);
+
+                $("#returnButton").on("click", function(){
+                    splash.clearLoginForm();
+                    window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'resetToken'));
+                    handleUserSignin.createGisExpertLoginForm();
+                });
+
+
+                $("#changePasswordButton").on("click", function(){
+                    handleUserSignin.changePassword(URLparams.resettoken);
+                });
+
+                return;
+            }
+
+            if(URLparams.registersuccess!==undefined && JSON.parse(URLparams.registersuccess)==="true"){
+                window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'registerSuccess'));
+                splash.showSuccess("Rejestracja powiodła się. Przejdź do skrzynki mailowej w celu weryfikacji")
+            }
+
+            if(URLparams.surveysubmitsuccess!==undefined){
+                if(JSON.parse(URLparams.surveysubmitsuccess)===true){
+                    window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
+                    splash.showSuccess("Ankieta zostala poprawnie wysłana")
+                }
+                else{
+                    window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
+                    splash.showError("W czasie wysyłania ankiety nastąpił błąd. Spróbuj zalogować się ponownie lub skontaktuj się z administratorem.")
+                }
+            }
+
+            if (handleUserSignin.availabilities.guest) {
+                $("<div id='guestSignin' class='splashInfoActionButton guestOfficialColor'>" +
+                    "<span class='socialMediaIcon sprites guest-user_29'></span>" +
+                    i18n.labels.guestName + "</div>"
+                ).appendTo(actionButtonContainer);
+                $("#guestSignin").on("click", function () {
+                    handleUserSignin.loggedIn = true;
+                    handleUserSignin.currentProvider = "guest";
+
+                    handleUserSignin.user = {
+                        name: i18n.labels.guestName,
+                        id: "",
+                        org: "_guest_",
+                        canSubmit: false
+                    };
+
+                    // Update the calling app
+                    handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
+                });
+            }
+
+            if (handleUserSignin.availabilities.gisExpertLogin) {
+                $("<div id='gisExpertLogin' class='splashInfoActionButton'><img src='images/Login.png' alt=''>" +
+                    "<span style='display: block;'>Logowanie</span></div>"
+                ).appendTo(actionButtonContainer);
+                $("#gisExpertLogin").on("click", function () {
+                    handleUserSignin.createGisExpertLoginForm();
+                });
+            }
+
+            if (handleUserSignin.availabilities.gisExpertRegister) {
+                $("<div id='gisExpertRegister' class='splashInfoActionButton'><img src='images/register.png' alt=''>" +
+                    "<span style='display: block;'>Rejestracja</span></div>"
+                ).appendTo(actionButtonContainer);
+                $("#gisExpertRegister").on("click", function() {
+                    handleUserSignin.statusCallback(handleUserSignin.notificationRegister);
+                });
+            }
+
+            if(URLparams.registerSuccess!==undefined && URLparams.registerSuccess===true){
+                splash.clearMessages();
+                splash.showSuccess("Rejestracja powiodła się. Przejdź do skrzynki mailowej w celu weryfikacji.")
+            }
+        },
+    
         }
       }
       handleUserSignin.currentProvider = "none";
