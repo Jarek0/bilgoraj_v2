@@ -89,7 +89,10 @@ define([],
             } else {
                 return url;
             }
-        }
+        },
+            eraseCookie :function(name){
+                this.setCookie(name,"",-1);
+            }
         };
         return tokenUtil;
 });

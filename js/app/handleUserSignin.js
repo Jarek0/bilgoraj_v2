@@ -175,7 +175,38 @@ define(["lib/i18n.min!nls/resources.js",
             }
         },
 
+        sendTokenToAutologin: function(value) {
+            $.ajax({
+                url: 'http://localhost:8080/geoanalityka-web/rest/auth/checkToken',
+                type: 'GET',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("token", value);
+                },
+
+                success: (function(data) {
+                    handleUserSignin.loggedIn = true;
+                    handleUserSignin.currentProvider = "gisExpert";
+                    handleUserSignin.user = {
+                        name: data.firstname + " " + data.lastname,
+                        id: data.token,
+                        org: "gisExpert",
+                        canSubmit: true
+                    };
+
+                    // Update the calling app
+                    tokenUtil.setCookie("token", data.token, 4);
+                    handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
+                }),
+                error: (function(xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                })
+            });
+        },
+
         createGisExpertLoginForm: function(){
+            if (document.cookie.indexOf('token') >= 0) {
+                handleUserSignin.sendTokenToAutologin(tokenUtil.getCookie('token'));
+            }
             var actionButtonContainer= splash.getActionsContainer();
             splash.clearLoginForm();
 
