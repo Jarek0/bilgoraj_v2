@@ -308,7 +308,7 @@ define(["lib/i18n.min!nls/resources.js"],
         var data = {
           update: "f=json&id=" + controller._config.featureSvcParams.id +
             "&adds=%5B" + controller._stringifyForApplyEdits(surveyPoint) + "%5D",
-          //token: this.getCookie('token')
+          token: this.getCookie('token')
         };
 
         //this.eraseCookie('token');
@@ -324,7 +324,7 @@ define(["lib/i18n.min!nls/resources.js"],
             $("#survey").remove();
           }),
           error: (function(xhr, ajaxOptions, thrownError) {
-            console.log("error");
+            console.log(xhr);
             controller._clustererView.refresh();
           })
         });
