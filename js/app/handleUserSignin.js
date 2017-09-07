@@ -118,20 +118,14 @@ define(["lib/i18n.min!nls/resources.js",
                 return;
             }
 
-            if(URLparams.registersuccess!==undefined && JSON.parse(URLparams.registersuccess)==="true"){
-                window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'registerSuccess'));
+            if(tokenUtil.getCookie('registerSuccess')!=='' && JSON.parse(tokenUtil.getCookie('registerSuccess'))===true){
+                tokenUtil.eraseCookie('registerSuccess');
                 splash.showSuccess("Rejestracja powiodła się. Przejdź do skrzynki mailowej w celu weryfikacji")
             }
 
-            if(URLparams.surveysubmitsuccess!==undefined){
-                if(JSON.parse(URLparams.surveysubmitsuccess)===true){
-                    window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
-                    splash.showSuccess("Dziękujemy za udział w ankiecie")
-                }
-                else{
-                    window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
-                    splash.showError("W czasie wysyłania ankiety nastąpił błąd. Spróbuj zalogować się ponownie lub skontaktuj się z administratorem.")
-                }
+            if(tokenUtil.getCookie('surveySubmitSuccess')!=='' && JSON.parse(tokenUtil.getCookie('surveySubmitSuccess'))===false){
+                tokenUtil.eraseCookie('surveySubmitSuccess');
+                splash.showError("W czasie wysyłania ankiety nastąpił błąd. Spróbuj zalogować się ponownie lub skontaktuj się z administratorem.")
             }
 
             if (handleUserSignin.availabilities.guest) {
@@ -395,13 +389,10 @@ define(["lib/i18n.min!nls/resources.js",
                     xhr.setRequestHeader("token", token);
                 },
                 success: (function (data) {
-                    console.log("ok");
-                    window.location.replace('');
+                    location.reload();
                 }),
                 error: (function (xhr, ajaxOptions, thrownError) {
-                    console.log(xhr);
-                    console.log("error");
-                    window.location.replace('');
+                    location.reload();
                 })
             });
 

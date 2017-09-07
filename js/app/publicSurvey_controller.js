@@ -21,8 +21,8 @@
  * @namespace controller
  * @version 0.1
  */
-define(["lib/i18n.min!nls/resources.js"],
-  function(i18n) {
+define(["lib/i18n.min!nls/resources.js","app/tokenUtil"],
+  function(i18n, tokenUtil) {
     "use strict";
     var controller;
     controller = {
@@ -124,8 +124,8 @@ define(["lib/i18n.min!nls/resources.js"],
 
 
 
-        require(["app/survey", "app/survey_controller", "app/scene_controller", "app/message", "app/register_controller"],
-          function(survey, survey_controller, scene_controller, message, register_controller) {
+        require(["app/survey", "app/survey_controller", "app/scene_controller", "app/message"],
+          function(survey, survey_controller, scene_controller, message) {
             // Prepare the survey
             controller._config.appParams._surveyDefinition = survey.createSurveyDefinition(
               controller._config.featureSvcParams.popupDescription,
@@ -150,10 +150,6 @@ define(["lib/i18n.min!nls/resources.js"],
                   // time that the 3D processors start up
                   var loadingProbablyDone = $.Deferred();
                   (function start() {
-                    if ($("#name").text() === "Gość") {
-                      $("#survey").remove();
-                      $("mainContent").css("height","100%");
-                    }
                     var timer_start = (+new Date()),
                       timer_end, stack = [],
                       last200Sum = 0,
@@ -321,12 +317,11 @@ define(["lib/i18n.min!nls/resources.js"],
           success: (function(data) {
             console.log("ok");
             controller._clustererView.refresh();
-            window.location.replace('?surveySubmitSuccess=true');
           }),
           error: (function(xhr, ajaxOptions, thrownError) {
             console.log("error");
-            controller._clustererView.refresh();
-            window.location.replace('?surveySubmitSuccess=false');
+              setShortLivingCookie('surveySubmitSuccess',false,10);
+              location.reload();
           })
         });
       },
@@ -380,6 +375,14 @@ define(["lib/i18n.min!nls/resources.js"],
         document.cookie = name + '=' + encodeURIComponent(content) + '; ' + expires +
           "; path=/";
       },
+
+        setShortLivingCookie : function(name, content, seconds) {
+            var d = new Date();
+            d.setTime(d.getTime() + (seconds)*1000);
+            var expires = 'expires=' + d.toUTCString();
+            document.cookie = name + '=' + encodeURIComponent(content) + '; ' + expires +
+                "; path=/";
+        },
 
       _clusterViewBuilder: function(view) {
         var clusterViewReady = $.Deferred();

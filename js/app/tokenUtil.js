@@ -11,6 +11,14 @@ define([],
                 "; path=/";
         },
 
+            setShortLivingCookie : function(name, content, seconds) {
+                var d = new Date();
+                d.setTime(d.getTime() + (seconds)*1000);
+                var expires = 'expires=' + d.toUTCString();
+                document.cookie = name + '=' + encodeURIComponent(content) + '; ' + expires +
+                    "; path=/";
+            },
+
             eraseCookie :function(name){
                 this.setCookie(name,"",-1);
         },
