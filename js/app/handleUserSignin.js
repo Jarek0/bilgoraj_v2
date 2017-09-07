@@ -121,18 +121,6 @@ define(["lib/i18n.min!nls/resources.js",
                 window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'registerSuccess'));
                 splash.showSuccess("Rejestracja powiodła się. Przejdź do skrzynki mailowej w celu weryfikacji")
             }
-
-            if(URLparams.surveysubmitsuccess!==undefined){
-                if(tokenUtil.getCookie(submit)){
-                    window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
-                    splash.showSuccess("Dziękujemy za udział w ankiecie")
-                }
-                else if(!tokenUtil.getCookie(submit)){
-                    window.history.pushState("object or string", document.title, tokenUtil.removeURLParameter(window.location.href,'surveySubmitSuccess'));
-                    splash.showError("W czasie wysyłania ankiety nastąpił błąd. Spróbuj zalogować się ponownie lub skontaktuj się z administratorem.")
-                }
-            }
-
             if (handleUserSignin.availabilities.guest) {
                 $("<div id='guestSignin' class='splashInfoActionButton guestOfficialColor'>" +
                     "<span class='socialMediaIcon sprites guest-user_29'></span>" +
@@ -430,7 +418,6 @@ define(["lib/i18n.min!nls/resources.js",
                     handleUserSignin.statusCallback(handleUserSignin.notificationSignIn);
                 }),
                 error: (function(xhr, ajaxOptions, thrownError) {
-                    console.log(xhr);
                 })
             });
         },

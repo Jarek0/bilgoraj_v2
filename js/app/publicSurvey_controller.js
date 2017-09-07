@@ -321,14 +321,11 @@ define(["lib/i18n.min!nls/resources.js"],
           success: (function(data) {
             console.log("ok");
             controller._clustererView.refresh();
-            tokenUtil.setCookie("submit","true",(1.0/36.0));
-            window.location.reload();
+            $("#survey").remove();
           }),
           error: (function(xhr, ajaxOptions, thrownError) {
             console.log("error");
             controller._clustererView.refresh();
-            tokenUtil.setCookie("submit","false",(1.0/36.0));
-            window.location.reload();
           })
         });
       },
