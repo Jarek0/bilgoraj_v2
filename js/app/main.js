@@ -15,8 +15,8 @@
  | limitations under the License.
  */
 //====================================================================================================================//
-define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag", "app/register_controller", "app/adBlockTester"],
-    function (i18n, config, splash, diag, register_contoller, adBlockTester) {
+define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag", "app/register_controller", "app/adBlockTester", "app/tokenUtil"],
+    function (i18n, config, splash, diag, register_contoller, adBlockTester, tokenUtil) {
         "use strict";
         var main = {
             //--------------------------------------------------------------------------------------------------------//
@@ -89,12 +89,13 @@ define(["lib/i18n.min!nls/resources.js", "app/config", "app/splash", "app/diag",
 
                             $.subscribe("register-success", function () {
                                 diag.appendWithLF("registration success");
-                                window.location.replace('?registerSuccess=true');
+                                tokenUtil.setShortLivingCookie('registerSuccess',true,10);
+                                location.reload();
                             });
 
                             $.subscribe("register-stop", function () {
                                 diag.appendWithLF("registration stop");
-                                window.location.replace('');
+                                location.reload();
                             });
 
                             // Run app components

@@ -266,8 +266,7 @@ define([
                     //----- UI and information updating --------------------------------------------------------------//
                     $.subscribe("signedIn-user", function (ignore, loginInfo) {
                         survey_controller._updateUser(loginInfo);
-
-                        if (survey_controller._initialized) {
+                        if (survey_controller._initialized && loginInfo.org!=='_guest_') {
                             survey_controller._startSurveying();
                         }
                     });
@@ -372,6 +371,7 @@ define([
             }
             survey_controller._initialized = true;
 
+            if(survey_controller._currentUser.org!=="_guest_")
             survey_controller._startSurveying();
         },
 
