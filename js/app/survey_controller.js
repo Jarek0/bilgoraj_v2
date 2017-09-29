@@ -418,7 +418,12 @@ define([
 
             survey.clearForm();
 
-            $.publish("request-signOut",token);
+            if (survey_controller._currentUser.canSubmit){
+                $.publish("request-signOut",token);
+            }
+            else{
+                location.reload();
+            }
         },
 
         _updateUser: function (loginInfo) {

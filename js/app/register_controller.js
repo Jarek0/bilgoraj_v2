@@ -149,7 +149,7 @@ define(['app/splash'],
                 };
 
                 $.ajax({
-                    url: 'http://localhost:8080/geoanalityka-web/rest/auth/register',
+                    url: 'http://ankieta-test-backend.gis-expert.pl/ankieta-web/rest/auth/register',
                     type: 'POST',
                     contentType: "application/json",
                     dataType: 'json',
@@ -158,13 +158,18 @@ define(['app/splash'],
                     }),
                     error: (function(xhr, ajaxOptions, thrownError) {
                         console.log(xhr);
-                        if(xhr.statusText.toLocaleLowerCase()==='bad request')
-                            register_controller.showValidationErrors(JSON.parse(JSON.parse(xhr.responseText).message));
-                        else{
-                            if(xhr.responseText===undefined)
-                                register_controller.showServerError("Błąd połączenia z serwerem");
-                            else
-                                register_controller.showServerError(JSON.parse(xhr.responseText).message);
+                        try{
+                            if(xhr.statusText.toLocaleLowerCase()==='bad request')
+                                register_controller.showValidationErrors(JSON.parse(JSON.parse(xhr.responseText).message));
+                            else{
+                                if(xhr.responseText===undefined)
+                                    register_controller.showServerError("Błąd połączenia z serwerem");
+                                else
+                                    register_controller.showServerError(JSON.parse(xhr.responseText).message);
+                            }
+                        }
+                        catch(e){
+                            register_controller.showServerError("Nastąpił niezidentyfikowany błąd. Prosimy o kontakt z administracją");
                         }
                     }),
                     data: JSON.stringify(data)
