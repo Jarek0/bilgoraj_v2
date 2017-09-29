@@ -284,7 +284,7 @@ define(["lib/i18n.min!nls/resources.js",
 
             else
                 $.ajax({
-                    url: "http://localhost:8080/geoanalityka-web/rest/auth/getToken",
+                    url: "http://ankieta-test-backend.gis-expert.pl/ankieta-web/rest/auth/getToken",
                     dataType: "json",
                     type: "POST",
                     contentType: 'application/json',
@@ -324,7 +324,7 @@ define(["lib/i18n.min!nls/resources.js",
             }
             else
                 $.ajax({
-                    url: "http://localhost:8080/geoanalityka-web/rest/auth/resetPassword",
+                    url: "http://ankieta-test-backend.gis-expert.pl/ankieta-web/rest/auth/resetPassword",
                     dataType: "json",
                     type: "POST",
                     contentType: 'application/json',
@@ -359,7 +359,7 @@ define(["lib/i18n.min!nls/resources.js",
             }
             else
                 $.ajax({
-                    url: "http://localhost:8080/geoanalityka-web/rest/auth/changePassword",
+                    url: "http://ankieta-test-backend.gis-expert.pl/ankieta-web/rest/auth/changePassword",
                     dataType: "json",
                     type: "POST",
                     contentType: 'application/json',
@@ -382,7 +382,7 @@ define(["lib/i18n.min!nls/resources.js",
 
         gisExpertSignOut: function(token){
             $.ajax({
-                url: "http://localhost:8080/geoanalityka-web/rest/auth/signOut",
+                url: "http://ankieta-test-backend.gis-expert.pl/ankieta-web/rest/auth/signOut",
                 type: "GET",
                 contentType: 'application/json',
                 beforeSend: function(xhr) {
@@ -400,7 +400,7 @@ define(["lib/i18n.min!nls/resources.js",
 
         sendTokenToAutologin: function(value) {
             $.ajax({
-                url: 'http://localhost:8080/geoanalityka-web/rest/auth/checkToken',
+                url: 'http://ankieta-test-backend.gis-expert.pl/ankieta-web/rest/auth/checkToken',
                 type: 'GET',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("token", value);
@@ -428,7 +428,7 @@ define(["lib/i18n.min!nls/resources.js",
 
         resend: function(data) {
             $.ajax({
-                url: 'http://localhost:8080/geoanalityka-web/rest/auth/resendMail',
+                url: 'http://ankieta-test-backend.gis-expert.pl/ankieta-web/rest/auth/resendMail',
                 type: 'POST',
                 contentType: "application/json",
                 dataType: 'json',

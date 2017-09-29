@@ -2,7 +2,7 @@ function resend() {
   var data = validate();
   if(data)
   $.ajax({
-    url: 'http://localhost:8080/geoanalityka-web/rest/auth/resendMail',
+    url: 'http://ankieta-test-backend.gis-expert.pl/ankieta-web/rest/auth/resendMail',
     type: 'POST',
     contentType: "application/json",
     dataType: 'json',
